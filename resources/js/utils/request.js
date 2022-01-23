@@ -3,7 +3,6 @@ import { Message } from 'element-ui';
 // import { isLogged, setLogged } from '@/utils/auth';
 
 // Create axios instance
-console.log('process.env.MIX_BASE_API', process.env.MIX_BASE_API);
 const service = window.axios.create({
   baseURL: process.env.MIX_BASE_API,
   timeout: 60000 * 5, // Request timeout

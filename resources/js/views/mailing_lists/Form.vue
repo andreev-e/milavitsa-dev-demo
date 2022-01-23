@@ -1,7 +1,6 @@
 <template>
   <div class="container">
-    <h1>Статистика</h1>
-    <p>Ntrcn</p>
+    <h1>Item</h1>
   </div>
 </template>
 

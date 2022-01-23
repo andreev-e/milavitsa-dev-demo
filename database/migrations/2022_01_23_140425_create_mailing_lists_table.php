@@ -15,6 +15,15 @@ class CreateMailingListsTable extends Migration
     {
         Schema::create('mailing_lists', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->dateTime('start');
+            $table->time('allow_send_from');
+            $table->time('allow_send_to');
+            $table->boolean('sms');
+            $table->boolean('email');
+            $table->boolean('telegram');
+            $table->boolean('whatsapp');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

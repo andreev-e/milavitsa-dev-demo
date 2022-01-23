@@ -19,6 +19,7 @@ Route::middleware(['auth'])->group(function () {
             });
             Route::any('/', 'LaravueController@index');
             Route::any('/{path}', 'LaravueController@index');
+            Route::any('/{path}/{path1}', 'LaravueController@index');
         });
     });
 });

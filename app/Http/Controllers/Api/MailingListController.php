@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\MailingList;
 use Illuminate\Http\Request;
+use App\Http\Resources\MailingListCollection;
 
 class MailingListController extends Controller
 {
@@ -16,7 +17,7 @@ class MailingListController extends Controller
     public function index()
     {
         $list = MailingList::all();
-		return MailingListResourceCollection::collection($list);
+		return MailingListCollection::collection($list);
     }
 
     /**
