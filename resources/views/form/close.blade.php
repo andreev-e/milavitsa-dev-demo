@@ -1,0 +1,2 @@
+{{ Form::close() }}
+</div>
