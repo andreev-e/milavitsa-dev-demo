@@ -1,10 +1,14 @@
 <template>
-  <el-container style="min-height: 500px; border: 1px solid #eee">
-    <el-aside width="250px" style="background-color: rgb(238, 241, 246)">
-      <Menu />
-    </el-aside>
-    <router-view />
-  </el-container>
+  <div>
+    <el-row :gutter="15">
+      <el-col :lg="6">
+        <Menu />
+      </el-col>
+      <el-col :lg="18">
+        <router-view />
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -16,5 +20,11 @@ export default {
 </script>
 
 <style>
-
+a{
+  text-decoration: none;
+  color: #409EFF;
+}
+.el-form-item__label {
+  font-weight: bold;
+}
 </style>

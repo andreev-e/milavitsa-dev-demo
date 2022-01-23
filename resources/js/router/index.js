@@ -4,8 +4,7 @@ import Router from 'vue-router';
 Vue.use(Router);
 
 /* Layout */
-import Layout from '../layout';
-// import moduleRoutes from '../router/modules/module';
+import Layout from '@/layout';
 
 export const constantRoutes = [
   {
@@ -15,11 +14,16 @@ export const constantRoutes = [
     children: [
       {
         path: 'mailing_lists',
-        component: () => import('../views/mailing_lists/Index'),
+        name: 'mailing-lists-list',
+        component: () => import('@/views/mailing_lists/Index'),
+      },
+      {
+        path: 'mailing_lists/:id',
+        component: () => import('@/views/mailing_lists/Form'),
       },
       {
         path: 'statistics',
-        component: () => import('../views/mailing_lists/Statistics'),
+        component: () => import('../views/Statistics'),
       }
     ],
   },

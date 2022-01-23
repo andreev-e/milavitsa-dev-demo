@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MailingList;
 use Illuminate\Http\Request;
 use App\Http\Resources\MailingListCollection;
+use App\Http\Resources\MailingListResource;
 
 class MailingListController extends Controller
 {
@@ -14,20 +15,18 @@ class MailingListController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $list = MailingList::all();
-		return MailingListCollection::collection($list);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $sort = json_decode($request->input('sort'));
+        $list = MailingList::select();
+        if ($sort) {
+            if ($sort->order === 'descending') {
+                $list->orderBy($sort->prop, 'desc');
+            } else {
+                $list->orderBy($sort->prop, 'asc');
+            }
+        }
+		return MailingListCollection::collection($list->paginate($request->limit));
     }
 
     /**
@@ -38,7 +37,10 @@ class MailingListController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $mailingList = MailingList::create();
+        $mailingList->fill($request->all());
+        $mailingList->save();
+		return new MailingListResource($mailingList);
     }
 
     /**
@@ -49,18 +51,7 @@ class MailingListController extends Controller
      */
     public function show(MailingList $mailingList)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\MailingList  $mailingList
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(MailingList $mailingList)
-    {
-        //
+        return new MailingListResource($mailingList);
     }
 
     /**
@@ -72,7 +63,9 @@ class MailingListController extends Controller
      */
     public function update(Request $request, MailingList $mailingList)
     {
-        //
+        $mailingList->fill($request->all());
+        $mailingList->save();
+		return new MailingListResource($mailingList);
     }
 
     /**
@@ -83,6 +76,6 @@ class MailingListController extends Controller
      */
     public function destroy(MailingList $mailingList)
     {
-        //
+        $mailingList->delete();
     }
 }

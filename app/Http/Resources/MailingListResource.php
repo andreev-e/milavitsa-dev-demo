@@ -17,6 +17,13 @@ class MailingListResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'sms' => (bool) $this->sms,
+            'email' => (bool) $this->email,
+            'telegram' => (bool) $this->telegram,
+            'whatsapp' => (bool) $this->whatsapp,
+            'start' => $this->start,
+            'allow_send_from' => $this->allow_send_from,
+            'allow_send_to' => $this->allow_send_to,
         ];
     }
 }

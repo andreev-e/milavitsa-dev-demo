@@ -17,6 +17,11 @@ class MailingListCollection extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'sms' => (bool) $this->sms,
+            'email' => (bool) $this->email,
+            'telegram' => (bool) $this->telegram,
+            'whatsapp' => (bool) $this->whatsapp,
+            'start' => $this->start ? $this->start->format('Y.m.d H:i') : null,
         ];
     }
 }
