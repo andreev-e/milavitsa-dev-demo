@@ -1,7 +1,8 @@
 <template>
-  <el-card>
-    Card
-  </el-card>
+  <div class="container">
+    <h1>Статистика</h1>
+    <p>Ntrcn</p>
+  </div>
 </template>
 
 <script>

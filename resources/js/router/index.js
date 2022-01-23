@@ -15,7 +15,11 @@ export const constantRoutes = [
     children: [
       {
         path: 'mailing_lists',
-        component: () => import('../views/mailing_lists/'),
+        component: () => import('../views/mailing_lists/Index'),
+      },
+      {
+        path: 'statistics',
+        component: () => import('../views/mailing_lists/Statistics'),
       }
     ],
   },

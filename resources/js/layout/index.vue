@@ -1,25 +1,18 @@
 <template>
-  <el-container>
-    <el-aside width="300px">
-      <el-menu :default-openeds="['1']">
-        <el-submenu index="1">
-          <template slot="title"><i class="el-icon-message"></i>Рассылка</template>
-          <el-menu-item-group>
-            <el-menu-item index="1-1">
-              <router-link to="/admin/mailing_lists">Список рассылок</router-link>
-            </el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-      </el-menu>
+  <el-container style="min-height: 500px; border: 1px solid #eee">
+    <el-aside width="250px" style="background-color: rgb(238, 241, 246)">
+      <Menu />
     </el-aside>
-    <el-main>
-      <app-main />
-    </el-main>
+    <router-view />
   </el-container>
 </template>
 
 <script>
+import Menu from '../layout/components/Menu';
 
+export default {
+  components: { Menu },
+}
 </script>
 
 <style>

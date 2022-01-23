@@ -1,5 +1,7 @@
 const mix = require('laravel-mix');
+const path = require('path');
 
+require('dotenv').config({path: path.join(__dirname, '.env')});
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -13,4 +15,7 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .vue()
+    .alias({
+       '@': path.join(__dirname, 'resources/js')
+    })
     .sass('resources/sass/app.scss', 'public/css');

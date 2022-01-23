@@ -17,8 +17,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('formProcessing', 'ClientsController@formProcessing')->name('formProcessing');
                 Route::post('formUpdate', 'ClientsController@formUpdate')->name('formUpdate');
             });
-            Route::get('/', 'LaravueController@index');
-            Route::get('/mailing_lists', 'LaravueController@index');
+            Route::any('/', 'LaravueController@index');
+            Route::any('/{path}', 'LaravueController@index');
         });
     });
 });
