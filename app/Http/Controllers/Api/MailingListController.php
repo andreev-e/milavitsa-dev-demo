@@ -18,7 +18,7 @@ class MailingListController extends Controller
     public function index(Request $request)
     {
         $sort = json_decode($request->input('sort'));
-        $list = MailingList::select();
+        $list = MailingList::select()->where('user_id', auth()->user()->id);
         if ($sort) {
             if ($sort->order === 'descending') {
                 $list->orderBy($sort->prop, 'desc');
@@ -37,7 +37,8 @@ class MailingListController extends Controller
      */
     public function store(Request $request)
     {
-        $mailingList = MailingList::create();
+        $mailingList = new MailingList();
+        $mailingList->user_id = auth()->user()->id;
         self::update($request, $mailingList);
     }
 
@@ -72,7 +73,6 @@ class MailingListController extends Controller
             $mailingList->allow_send_from = null;
             $mailingList->allow_send_to = null;
         }
-
         $mailingList->save();
 		return new MailingListResource($mailingList);
     }

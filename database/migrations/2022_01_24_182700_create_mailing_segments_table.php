@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMailingListsTable extends Migration
+class CreateMailingSegmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,11 @@ class CreateMailingListsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mailing_lists', function (Blueprint $table) {
+        Schema::create('mailing_segments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->dateTimeTz('start')->nullable();
-            $table->boolean('submitted')->default(0);
-            $table->time('allow_send_from')->nullable();
-            $table->time('allow_send_to')->nullable();
-            $table->boolean('sms')->default(0);
-            $table->boolean('email')->default(0);
-            $table->boolean('telegram')->default(0);
-            $table->boolean('whatsapp')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -38,6 +30,6 @@ class CreateMailingListsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mailing_lists');
+        Schema::dropIfExists('mailing_segments');
     }
 }
