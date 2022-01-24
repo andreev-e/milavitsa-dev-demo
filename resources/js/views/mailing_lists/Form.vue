@@ -55,6 +55,19 @@
         <el-row :gutter="15">
           <el-col :span="24">
             <h2>Сегменты</h2>
+
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Выберите сегменты" prop="allow_send">
+              <el-select v-model="form.segments" v-loading="loadingSegments" filterable multiple>
+                <el-option
+                  v-for="item in segments"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="15">
@@ -69,9 +82,10 @@
 
 <script>
 import MailingListResource from '@/api/mailing_list.js'
+import MailingSegmentResource from '@/api/mailing_segments.js'
 
 const mailingList = new MailingListResource();
-
+const mailingSegment = new MailingSegmentResource();
 
 const checkAllowSend = function (rule, value, callback) {
   if ((this.form.allow_send_from && this.form.allow_send_to) ||
@@ -94,6 +108,8 @@ export default {
   data() {
     return {
       loading: false,
+      loadingSegments: false,
+      segments: [],
       form: {
         id: null,
         name: null,
@@ -164,6 +180,7 @@ export default {
     if (id !== 'create') {
       this.form.id = id;
       this.loadItem();
+      this.loadSegments();
     }
   },
   methods: {
@@ -172,6 +189,12 @@ export default {
       const { data } = await mailingList.get(this.form.id)
       this.form = data
       this.loading = false
+    },
+    async loadSegments() {
+      this.loadingSegments = true
+      const { data } = await mailingSegment.list()
+      this.segments = data
+      this.loadingSegments = false
     },
     validate() {
       this.$refs.form.validate((valid) => {

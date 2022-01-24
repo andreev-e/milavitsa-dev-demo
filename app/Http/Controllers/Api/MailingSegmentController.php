@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\MailingSegment;
+use App\Http\Resources\MailingSegmentCollection;
 use Illuminate\Http\Request;
 
 class MailingSegmentController extends Controller
@@ -12,9 +14,10 @@ class MailingSegmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $list = MailingSegment::select()->where('user_id', auth()->user()->id);
+        return MailingSegmentCollection::collection($list->paginate($request->limit));
     }
 
     /**
