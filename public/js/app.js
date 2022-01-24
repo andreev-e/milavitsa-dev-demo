@@ -2308,7 +2308,7 @@ var constantRoutes = [{
     path: 'mailing_lists',
     name: 'mailing-lists-list',
     component: function component() {
-      return __webpack_require__.e(/*! import() */ "resources_js_views_mailing_lists_Index_vue").then(__webpack_require__.bind(__webpack_require__, /*! @/views/mailing_lists/Index */ "./resources/js/views/mailing_lists/Index.vue"));
+      return __webpack_require__.e(/*! import() */ "resources_js_views_mailing_lists_List_vue").then(__webpack_require__.bind(__webpack_require__, /*! @/views/mailing_lists/List */ "./resources/js/views/mailing_lists/List.vue"));
     }
   }, {
     path: 'mailing_lists/:id',
@@ -4162,7 +4162,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\na{\r\n  text-decoration: none;\r\n  color: #409EFF;\n}\n.el-form-item__label {\r\n  font-weight: bold;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\na{\r\n  text-decoration: none;\r\n  color: #409EFF;\n}\n.el-form-item__label {\r\n  font-weight: bold;\n}\nh1 {\r\n  display: inline;\r\n  font-size: 1.8rem;\n}\nh2 {\r\n  display: inline;\r\n  font-size: 1.5rem;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -83248,7 +83248,7 @@ Vue.compile = compileToFunctions;
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_views_mailing_lists_Index_vue":1,"resources_js_views_mailing_lists_Form_vue":1,"resources_js_views_Statistics_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_views_mailing_lists_List_vue":1,"resources_js_views_mailing_lists_Form_vue":1,"resources_js_views_Statistics_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

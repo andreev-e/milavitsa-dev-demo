@@ -22,8 +22,8 @@ class MailingListResource extends JsonResource
             'telegram' => (bool) $this->telegram,
             'whatsapp' => (bool) $this->whatsapp,
             'start' => $this->start,
-            'allow_send_from' => $this->allow_send_from,
-            'allow_send_to' => $this->allow_send_to,
+            'allow_send_from' => substr($this->allow_send_from, 0, 5),
+            'allow_send_to' => substr($this->allow_send_to, 0, 5),
         ];
     }
 }

@@ -27,4 +27,12 @@ a{
 .el-form-item__label {
   font-weight: bold;
 }
+h1 {
+  display: inline;
+  font-size: 1.8rem;
+}
+h2 {
+  display: inline;
+  font-size: 1.5rem;
+}
 </style>

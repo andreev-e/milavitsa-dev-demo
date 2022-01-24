@@ -22,5 +22,6 @@ class MailingList extends Model
 
     protected $casts = [
         'start' => 'datetime',
+        'start' => 'datetime',
     ];
 }

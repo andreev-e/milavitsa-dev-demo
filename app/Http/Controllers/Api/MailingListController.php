@@ -38,9 +38,7 @@ class MailingListController extends Controller
     public function store(Request $request)
     {
         $mailingList = MailingList::create();
-        $mailingList->fill($request->all());
-        $mailingList->save();
-		return new MailingListResource($mailingList);
+        self::update($request, $mailingList);
     }
 
     /**
@@ -64,6 +62,17 @@ class MailingListController extends Controller
     public function update(Request $request, MailingList $mailingList)
     {
         $mailingList->fill($request->all());
+
+        $minTime = min($mailingList->allow_send_from, $mailingList->allow_send_to);
+        $maxTime = max($mailingList->allow_send_from, $mailingList->allow_send_to);
+        if ($maxTime && $minTime && $maxTime != $minTime) {
+            $mailingList->allow_send_from = $minTime;
+            $mailingList->allow_send_to = $maxTime;
+        } else {
+            $mailingList->allow_send_from = null;
+            $mailingList->allow_send_to = null;
+        }
+
         $mailingList->save();
 		return new MailingListResource($mailingList);
     }

@@ -15,7 +15,7 @@ export const constantRoutes = [
       {
         path: 'mailing_lists',
         name: 'mailing-lists-list',
-        component: () => import('@/views/mailing_lists/Index'),
+        component: () => import('@/views/mailing_lists/List'),
       },
       {
         path: 'mailing_lists/:id',
