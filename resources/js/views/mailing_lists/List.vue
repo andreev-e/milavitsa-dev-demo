@@ -21,6 +21,11 @@
             <router-link :to="`mailing_lists/${scope.row.id}`">{{ scope.row.name }}</router-link>
           </template>
         </el-table-column>
+        <el-table-column prop="status" label="Статус" sortable="custom">
+          <template slot-scope="scope">
+            {{ statuses[scope.row.status] }}
+          </template>
+        </el-table-column>
         <el-table-column prop="start" label="Запланирована на" sortable="custom" width="200px;">
           <template slot-scope="scope">
             {{ scope.row.start }}
@@ -32,6 +37,13 @@
                 {{ scope.row.allow_send_from }}&nbsp;-&nbsp;{{ scope.row.allow_send_to }}
             </span>
             <span v-else>Круглосуточно</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sms" label="Сегменты">
+          <template slot-scope="scope">
+            <el-tag v-for="(segment, index) in scope.row.segments" size="mini" :key="`seg_${index}`">
+              {{ segment }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="sms" label="SMS" sortable="custom">
@@ -89,6 +101,10 @@ export default {
         sort: { prop: 'id', order: 'descending' }
       },
       loading: false,
+      statuses: {
+        blueprint: 'Черновик',
+        submitted: 'Запущена',
+      }
     }
   },
   mounted() {

@@ -16,7 +16,7 @@ class MailingSegmentController extends Controller
      */
     public function index(Request $request)
     {
-        $list = MailingSegment::select()->where('user_id', auth()->user()->id);
+        $list = MailingSegment::select();
         return MailingSegmentCollection::collection($list->paginate($request->limit));
     }
 

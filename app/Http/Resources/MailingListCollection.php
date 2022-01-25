@@ -24,6 +24,8 @@ class MailingListCollection extends JsonResource
             'start' => $this->start ? $this->start->format('Y.m.d H:i') : null,
             'allow_send_from' => substr($this->allow_send_from, 0, 5),
             'allow_send_to' => substr($this->allow_send_to, 0, 5),
+            'status' => $this->status,
+            'segments' => $this->segments->pluck('name', 'id'),
         ];
     }
 }

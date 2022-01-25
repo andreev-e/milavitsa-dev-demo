@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMailingSegmentsTable extends Migration
+class CreateMailingSegmentsUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateMailingSegmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mailing_segments', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::create('mailing_segment_user', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('mailing_segment_id');
+            $table->integer('user_id');
         });
     }
 
@@ -28,6 +27,6 @@ class CreateMailingSegmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mailing_segments');
+        Schema::dropIfExists('mailing_segment_user');
     }
 }

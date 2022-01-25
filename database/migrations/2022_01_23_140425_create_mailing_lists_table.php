@@ -16,10 +16,11 @@ class CreateMailingListsTable extends Migration
         Schema::create('mailing_lists', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->text('text');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->dateTimeTz('start')->nullable();
-            $table->boolean('submitted')->default(0);
+            $table->dateTime('start')->nullable();
+            $table->string('status')->default('blueprint');
             $table->time('allow_send_from')->nullable();
             $table->time('allow_send_to')->nullable();
             $table->boolean('sms')->default(0);

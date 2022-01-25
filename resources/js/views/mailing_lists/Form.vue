@@ -58,7 +58,7 @@
 
           </el-col>
           <el-col :span="12">
-            <el-form-item label="Выберите сегменты" prop="allow_send">
+            <el-form-item label="Выберите сегменты" prop="segments">
               <el-select v-model="form.segments" v-loading="loadingSegments" filterable multiple>
                 <el-option
                   v-for="item in segments"
@@ -72,7 +72,11 @@
         </el-row>
         <el-row :gutter="15">
           <el-col :span="24">
-            <el-button type="success" @click="validate">Сохранить</el-button>
+            <el-button :type="form.start === null ? 'danger' : 'success'" @click="validate">
+              <span v-if="form.start === null">Запустить сразу</span>
+              <span v-else>Запланировать</span>
+            </el-button>
+            <el-button type="default" @click="blueprint">Сохранить в черновик</el-button>
           </el-col>
         </el-row>
       </el-card>
@@ -120,6 +124,7 @@ export default {
         start: null,
         allow_send_from: '9:00',
         allow_send_to: '21:00',
+        status: null,
       },
       pickerOptions: {
         firstDayOfWeek: 1,
@@ -152,12 +157,15 @@ export default {
           { required: true, message: 'Поле Название - обязательное', trigger: 'blur' },
           { min: 3, message: 'Не менее 3 букв', trigger: 'blur' }
         ],
+        segments: [
+          { type: 'array', required: true, message: 'Хотя бы 1 сегмент', trigger: 'blur' },
+        ],
         channels: [
           { validator: checkChannels.bind(this), trigger: 'blur' }
         ],
         allow_send: [
           { validator: checkAllowSend.bind(this), trigger: 'blur' }
-        ]
+        ],
       }
     };
   },
@@ -180,8 +188,8 @@ export default {
     if (id !== 'create') {
       this.form.id = id;
       this.loadItem();
-      this.loadSegments();
     }
+    this.loadSegments();
   },
   methods: {
     async loadItem() {
@@ -199,12 +207,20 @@ export default {
     validate() {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          if (this.form.start === null) {
+            this.form.start = new Date();
+          }
+          this.form.status = 'submitted';
           this.save()
         } else {
           this.$message.error('Не все поля правильно заполнены')
           return false;
         }
       });
+    },
+    blueprint() {
+      this.form.status = 'blueprint';
+      this.save()
     },
     async save() {
       this.loading = true

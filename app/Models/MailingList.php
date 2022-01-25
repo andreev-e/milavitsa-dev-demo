@@ -18,10 +18,15 @@ class MailingList extends Model
         'start',
         'allow_send_from',
         'allow_send_to',
+        'status',
     ];
 
     protected $casts = [
         'start' => 'datetime',
         'start' => 'datetime',
     ];
+
+    public function segments() {
+        return $this->belongsToMany(MailingSegment::class);
+    }
 }

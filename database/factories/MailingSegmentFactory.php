@@ -18,7 +18,6 @@ class MailingSegmentFactory extends Factory
     {
         return [
             'name' => 'Сегмент ' . $this->faker->numberBetween($min = 111, $max = 999),
-            'user_id' => '3492',
         ];
     }
 }

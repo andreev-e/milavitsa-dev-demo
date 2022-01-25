@@ -17,8 +17,8 @@ class MailingListController extends Controller
      */
     public function index(Request $request)
     {
+        $list = MailingList::select();
         $sort = json_decode($request->input('sort'));
-        $list = MailingList::select()->where('user_id', auth()->user()->id);
         if ($sort) {
             if ($sort->order === 'descending') {
                 $list->orderBy($sort->prop, 'desc');
@@ -73,6 +73,8 @@ class MailingListController extends Controller
             $mailingList->allow_send_from = null;
             $mailingList->allow_send_to = null;
         }
+        $mailingList->segments()->sync($request->input('segments'));
+
         $mailingList->save();
 		return new MailingListResource($mailingList);
     }
