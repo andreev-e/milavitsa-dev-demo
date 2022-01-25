@@ -16,7 +16,7 @@ class MailingSegmentSeeder extends Seeder
     public function run()
     {
         MailingSegment::factory()->count(3)->create()->each(function ($s) {
-            $s->users()->attach(User::inRandomOrder()->limit(50)->get());
+            $s->users()->attach(User::inRandomOrder()->limit(rand(10,100))->get());
         });;
     }
 }

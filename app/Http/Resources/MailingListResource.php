@@ -17,6 +17,7 @@ class MailingListResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'text' => $this->text,
             'sms' => (bool) $this->sms,
             'email' => (bool) $this->email,
             'telegram' => (bool) $this->telegram,
@@ -25,6 +26,7 @@ class MailingListResource extends JsonResource
             'allow_send_from' => substr($this->allow_send_from, 0, 5),
             'allow_send_to' => substr($this->allow_send_to, 0, 5),
             'segments' => $this->segments->pluck('id'),
+            'channel_order' => json_decode($this->channel_order),
         ];
     }
 }

@@ -13,6 +13,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item :label="`Текст сообщения (${messageLength} знаков)`" prop="text">
+              <el-input v-model="form.text" type="textarea" :autosize="{ minRows: 2, maxRows: 8}"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="Включить каналы" prop="channels">
               <el-switch v-model="form.sms" active-text="SMS" />
               <el-switch v-model="form.email" active-text="Email" />
@@ -20,7 +25,7 @@
               <el-switch v-model="form.whatsapp" active-text="Whatsapp" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="Дата и время начала рассылки">
               <el-switch v-model="start" active-text="Сразу" inactive-text="Запланировать" />
             </el-form-item>
@@ -35,27 +40,81 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="Диапазон времени доставки сообщений" prop="allow_send">
-              <el-time-select
-                v-model="form.allow_send_from"
-                placeholder="C"
-                :picker-options="timeSelectOptions"
-              >
-              </el-time-select>
-              <el-time-select
-                v-model="form.allow_send_to"
-                placeholder="По"
-                :picker-options="timeSelectOptions"
-              >
-              </el-time-select>
+              <el-row>
+                <el-col :span="11">
+                  <el-time-select
+                    v-model="form.allow_send_from"
+                    placeholder="C"
+                    :picker-options="timeSelectOptions"
+                    style="width:100%"
+                  />
+                </el-col>
+                <el-col :span="2" style="text-align: center">
+                  -
+                </el-col>
+                <el-col :span="11">
+                  <el-time-select
+                    v-model="form.allow_send_to"
+                    placeholder="По"
+                    :picker-options="timeSelectOptions"
+                    style="width:100%"
+                  />
+                </el-col>
+              </el-row>
+
+
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="15">
           <el-col :span="24">
-            <h2>Сегменты</h2>
+            <h2>Каналы</h2>
+          </el-col>
+          <draggable group="channels" @start="drag=true" @sort="onSort" ref="draggable">
+            <el-col v-if="form.telegram" :span="24" id="telegram">
+              <el-card>
+                <div slot="header">
+                  <h3>Telegram</h3>
+                </div>
+              </el-card>
+            </el-col>
+            <el-col v-if="form.whatsapp" :span="24" id="whatsapp">
+              <el-card>
+                <div slot="header">
+                  <h3>Whatsapp</h3>
+                </div>
+                <el-form-item label="Стоимость 1 сообщения">
+                  <el-input v-model="oneWhatsapp" type="text" />
+                </el-form-item>
+                <p>Стоимость рассылки {{ whatsappPrice }} руб.</p>
+              </el-card>
+            </el-col>
+            <el-col v-if="form.sms" :span="24" id="sms">
+              <el-card>
+                <div slot="header">
+                  <h3>SMS</h3>
+                </div>
+                <el-form-item label="Стоимость 1 сообщения">
+                  <el-input v-model="oneSms" type="text" />
+                </el-form-item>
+                <p>Стоимость рассылки {{ smsPrice }} руб.</p>
+              </el-card>
+            </el-col>
+            <el-col v-if="form.email" :span="24" id="email">
+              <el-card>
+                <div slot="header">
+                  <h3>Email</h3>
+                </div>
+              </el-card>
+            </el-col>
 
+          </draggable>
+        </el-row>
+        <el-row :gutter="15">
+          <el-col :span="24">
+            <h2>Сегменты</h2>
           </el-col>
           <el-col :span="12">
             <el-form-item label="Выберите сегменты" prop="segments">
@@ -63,7 +122,7 @@
                 <el-option
                   v-for="item in segments"
                   :key="item.id"
-                  :label="item.name"
+                  :label="`${item.name} - ${item.volume} чел.`"
                   :value="item.id">
                 </el-option>
               </el-select>
@@ -85,6 +144,7 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 import MailingListResource from '@/api/mailing_list.js'
 import MailingSegmentResource from '@/api/mailing_segments.js'
 
@@ -109,14 +169,18 @@ const checkChannels = function (rule, value, callback) {
 };
 
 export default {
+  components: { draggable },
   data() {
     return {
       loading: false,
       loadingSegments: false,
       segments: [],
+      oneSms: 5,
+      oneWhatsapp: 0.5,
       form: {
         id: null,
         name: null,
+        text: null,
         sms: false,
         email: false,
         telegram: false,
@@ -125,7 +189,14 @@ export default {
         allow_send_from: '9:00',
         allow_send_to: '21:00',
         status: null,
+        channel_order: {
+          0: 'telegram',
+          1: 'whatsapp',
+          2: 'sms',
+          3: 'email',
+        },
       },
+
       pickerOptions: {
         firstDayOfWeek: 1,
         shortcuts: [
@@ -166,10 +237,29 @@ export default {
         allow_send: [
           { validator: checkAllowSend.bind(this), trigger: 'blur' }
         ],
+        text: [
+          { required: true, message: 'Поле Текст сообщения - обязательное', trigger: 'blur' },
+          { min: 3, message: 'Не менее 10 знаков', trigger: 'blur' }
+        ],
       }
     };
   },
   computed: {
+    messageLength: {
+      get: function () {
+        return this.form.text ? this.form.text.length : 0;
+      },
+    },
+    smsPrice: {
+      get: function () {
+        return Math.ceil(this.messageLength / 70 ) * this.oneSms;
+      },
+    },
+    whatsappPrice: {
+      get: function () {
+        return Math.ceil(this.messageLength / 70 ) * this.oneWhatsapp;
+      },
+    },
     start: {
       get: function () {
         return this.form.start === null
@@ -220,9 +310,9 @@ export default {
     },
     blueprint() {
       this.form.status = 'blueprint';
-      this.save()
+      this.save(true)
     },
-    async save() {
+    async save(stay = false) {
       this.loading = true
       if (this.form.id === null) {
         const { data } = await mailingList.store(this.form)
@@ -232,12 +322,19 @@ export default {
         this.form = data
       }
       this.loading = false
-      this.$router.push({name: 'mailing-lists-list'})
+      if (!stay) {
+        this.$router.push({name: 'mailing-lists-list'})
+      }
+    },
+    onSort(e) {
+      this.form.channel_order = this.$refs.draggable.$children.map(item => item.$attrs.id)
     }
   },
 }
 </script>
 
 <style scoped>
-
+  .el-card {
+    margin-bottom: 15px;
+  }
 </style>

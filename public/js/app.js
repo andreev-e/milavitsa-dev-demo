@@ -67775,9 +67775,9 @@ var render = function () {
         "el-row",
         { attrs: { gutter: 15 } },
         [
-          _c("el-col", { attrs: { lg: 6 } }, [_c("Menu")], 1),
+          _c("el-col", { attrs: { lg: 4 } }, [_c("Menu")], 1),
           _vm._v(" "),
-          _c("el-col", { attrs: { lg: 18 } }, [_c("router-view")], 1),
+          _c("el-col", { attrs: { lg: 20 } }, [_c("router-view")], 1),
         ],
         1
       ),

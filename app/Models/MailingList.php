@@ -18,7 +18,9 @@ class MailingList extends Model
         'start',
         'allow_send_from',
         'allow_send_to',
+        'text',
         'status',
+        'channel_order',
     ];
 
     protected $casts = [
