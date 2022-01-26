@@ -17,10 +17,7 @@ class MailingListCollection extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'sms' => (bool) $this->sms,
-            'email' => (bool) $this->email,
-            'telegram' => (bool) $this->telegram,
-            'whatsapp' => (bool) $this->whatsapp,
+            'selected_channels' => json_decode($this->selected_channels),
             'start' => $this->start ? $this->start->format('Y.m.d H:i') : null,
             'allow_send_from' => substr($this->allow_send_from, 0, 5),
             'allow_send_to' => substr($this->allow_send_to, 0, 5),

@@ -35,4 +35,8 @@ h2 {
   display: inline;
   font-size: 1.5rem;
 }
+h3 {
+  display: inline;
+  font-size: 1.2rem;
+}
 </style>

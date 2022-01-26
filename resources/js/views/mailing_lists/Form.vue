@@ -18,14 +18,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="Включить каналы" prop="channels">
-              <el-switch v-model="form.sms" active-text="SMS" />
-              <el-switch v-model="form.email" active-text="Email" />
-              <el-switch v-model="form.telegram" active-text="Telegram" />
-              <el-switch v-model="form.whatsapp" active-text="Whatsapp" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
             <el-form-item label="Дата и время начала рассылки">
               <el-switch v-model="start" active-text="Сразу" inactive-text="Запланировать" />
             </el-form-item>
@@ -63,54 +55,85 @@
                   />
                 </el-col>
               </el-row>
-
-
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="15">
-          <el-col :span="24">
-            <h2>Каналы</h2>
+          <el-col :span="12">
+            <h3>Доступные каналы</h3>
+            <draggable class="list-group" :list="channels" group="channels">
+              <div
+                class="list-group-item"
+                v-for="(element) in channels"
+                :key="element"
+              >
+                {{ element }}
+              </div>
+            </draggable>
           </el-col>
-          <draggable group="channels" @start="drag=true" @sort="onSort" ref="draggable">
-            <el-col v-if="form.telegram" :span="24" id="telegram">
-              <el-card>
-                <div slot="header">
-                  <h3>Telegram</h3>
-                </div>
-              </el-card>
-            </el-col>
-            <el-col v-if="form.whatsapp" :span="24" id="whatsapp">
-              <el-card>
-                <div slot="header">
-                  <h3>Whatsapp</h3>
-                </div>
-                <el-form-item label="Стоимость 1 сообщения">
-                  <el-input v-model="oneWhatsapp" type="text" />
-                </el-form-item>
-                <p>Стоимость рассылки {{ whatsappPrice }} руб.</p>
-              </el-card>
-            </el-col>
-            <el-col v-if="form.sms" :span="24" id="sms">
-              <el-card>
-                <div slot="header">
-                  <h3>SMS</h3>
-                </div>
-                <el-form-item label="Стоимость 1 сообщения">
-                  <el-input v-model="oneSms" type="text" />
-                </el-form-item>
-                <p>Стоимость рассылки {{ smsPrice }} руб.</p>
-              </el-card>
-            </el-col>
-            <el-col v-if="form.email" :span="24" id="email">
-              <el-card>
-                <div slot="header">
-                  <h3>Email</h3>
-                </div>
-              </el-card>
-            </el-col>
-
-          </draggable>
+          <el-col :span="12">
+            <h3>Выбранные каналы по порядку</h3>
+            <draggable class="list-group" :list="form.selected_channels" group="channels">
+              <div
+                class="list-group-item"
+                v-for="(element) in form.selected_channels"
+                :key="element"
+              >
+                {{ element }}
+              </div>
+            </draggable>
+          </el-col>
+        </el-row>
+        <el-row v-if="form.selected_channels" :gutter="15">
+          <el-col :span="24">
+            <h2>Настройки каналов</h2>
+          </el-col>
+          <el-col v-if="form.selected_channels.indexOf('telegram') !== -1" :span="24" id="telegram">
+            <el-card class="equal_height">
+              <div slot="header">
+                <h3>Telegram</h3>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col v-if="form.selected_channels.indexOf('whatsapp') !== -1" :span="24" id="whatsapp">
+            <el-card class="equal_height">
+              <div slot="header">
+                <h3>Whatsapp</h3>
+              </div>
+              <el-form-item label="Стоимость 1 сообщения">
+                <el-input v-model="oneWhatsapp" type="text" />
+              </el-form-item>
+              <p>Стоимость рассылки {{ whatsappPrice }} руб.</p>
+            </el-card>
+          </el-col>
+          <el-col v-if="form.selected_channels.indexOf('sms') !== -1" :span="24" id="sms">
+            <el-card class="equal_height">
+              <div slot="header">
+                <h3>SMS</h3>
+              </div>
+              <el-form-item label="Стоимость 1 сообщения">
+                <el-input v-model="oneSms" type="text" />
+              </el-form-item>
+              <p>Стоимость рассылки {{ smsPrice }} руб.</p>
+            </el-card>
+          </el-col>
+          <el-col v-if="form.selected_channels.indexOf('email') !== -1" :span="24" id="email">
+            <el-card class="equal_height">
+              <div slot="header">
+                <h3>Email</h3>
+              </div>
+              <el-form-item label="Шаблон письма TODO">
+                <el-select v-model="form.email_teplate" clearable>
+                  <el-option
+                    v-for="item in mailtemplates"
+                    :key="item"
+                    :label="`${item}`"
+                    :value="item">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-card>
+          </el-col>
         </el-row>
         <el-row :gutter="15">
           <el-col :span="24">
@@ -126,6 +149,7 @@
                   :value="item.id">
                 </el-option>
               </el-select>
+              <p>Всего {{ totalUsers }} чел.</p>
             </el-form-item>
           </el-col>
         </el-row>
@@ -135,7 +159,7 @@
               <span v-if="form.start === null">Запустить сразу</span>
               <span v-else>Запланировать</span>
             </el-button>
-            <el-button type="default" @click="blueprint">Сохранить в черновик</el-button>
+            <el-button v-if="form.name" type="default" @click="blueprint">Сохранить в черновик</el-button>
           </el-col>
         </el-row>
       </el-card>
@@ -189,14 +213,11 @@ export default {
         allow_send_from: '9:00',
         allow_send_to: '21:00',
         status: null,
-        channel_order: {
-          0: 'telegram',
-          1: 'whatsapp',
-          2: 'sms',
-          3: 'email',
-        },
+        channel_order: [],
+        segments: [],
+        email_teplate: null,
+        selected_channels: ['email'],
       },
-
       pickerOptions: {
         firstDayOfWeek: 1,
         shortcuts: [
@@ -241,8 +262,21 @@ export default {
           { required: true, message: 'Поле Текст сообщения - обязательное', trigger: 'blur' },
           { min: 3, message: 'Не менее 10 знаков', trigger: 'blur' }
         ],
-      }
+      },
+      channels: [
+        'email',
+        'telegram',
+        'whatsapp',
+        'sms',
+      ],
+      mailtemplates: [
+        'Темплейт 1',
+        'Темплейт 2',
+        'Темплейт 3',
+      ],
     };
+  },
+  watch: {
   },
   computed: {
     messageLength: {
@@ -250,14 +284,23 @@ export default {
         return this.form.text ? this.form.text.length : 0;
       },
     },
+    totalUsers: {
+      get: function () {
+        if (this.segments.length) {
+          return this.segments.reduce((acc, item) =>
+            acc + (this.form.segments.indexOf(item.id) !== -1 ? item.volume : 0), 0)
+        }
+        return 0;
+      },
+    },
     smsPrice: {
       get: function () {
-        return Math.ceil(this.messageLength / 70 ) * this.oneSms;
+        return Math.ceil(this.messageLength / 70 ) * this.oneSms * this.totalUsers;
       },
     },
     whatsappPrice: {
       get: function () {
-        return Math.ceil(this.messageLength / 70 ) * this.oneWhatsapp;
+        return Math.ceil(this.messageLength / 70 ) * this.oneWhatsapp * this.totalUsers;
       },
     },
     start: {
@@ -286,6 +329,7 @@ export default {
       this.loading = true
       const { data } = await mailingList.get(this.form.id)
       this.form = data
+      this.channels = this.channels.filter(item => this.form.selected_channels.indexOf(item) === -1)
       this.loading = false
     },
     async loadSegments() {
@@ -326,9 +370,6 @@ export default {
         this.$router.push({name: 'mailing-lists-list'})
       }
     },
-    onSort(e) {
-      this.form.channel_order = this.$refs.draggable.$children.map(item => item.$attrs.id)
-    }
   },
 }
 </script>
@@ -336,5 +377,31 @@ export default {
 <style scoped>
   .el-card {
     margin-bottom: 15px;
+  }
+  .list-group-item {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.125);
+    cursor: move;
+  }
+  .list-group-item:first-child {
+      border-top-left-radius: 0.25rem;
+      border-top-right-radius: 0.25rem;
+  }
+  .list-group {
+    display: -ms-flexbox;
+    display: -webkit-box;
+    display: flex;
+    -ms-flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    padding: 10px;
+    margin-bottom: 0;
+    min-height:20px;
+    background-color: #F0F0F0;
   }
 </style>

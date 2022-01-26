@@ -4162,7 +4162,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\na{\r\n  text-decoration: none;\r\n  color: #409EFF;\n}\n.el-form-item__label {\r\n  font-weight: bold;\n}\nh1 {\r\n  display: inline;\r\n  font-size: 1.8rem;\n}\nh2 {\r\n  display: inline;\r\n  font-size: 1.5rem;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\na{\r\n  text-decoration: none;\r\n  color: #409EFF;\n}\n.el-form-item__label {\r\n  font-weight: bold;\n}\nh1 {\r\n  display: inline;\r\n  font-size: 1.8rem;\n}\nh2 {\r\n  display: inline;\r\n  font-size: 1.5rem;\n}\nh3 {\r\n  display: inline;\r\n  font-size: 1.2rem;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

@@ -23,11 +23,8 @@ class CreateMailingListsTable extends Migration
             $table->string('status')->default('blueprint');
             $table->time('allow_send_from')->nullable();
             $table->time('allow_send_to')->nullable();
-            $table->boolean('sms')->default(0);
-            $table->boolean('email')->default(0);
-            $table->boolean('telegram')->default(0);
-            $table->boolean('whatsapp')->default(0);
-            $table->string('channel_order')->nullable();
+            $table->string('email_teplate')->nullable();
+            $table->string('selected_channels')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

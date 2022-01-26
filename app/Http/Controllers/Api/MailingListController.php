@@ -73,10 +73,10 @@ class MailingListController extends Controller
             $mailingList->allow_send_from = null;
             $mailingList->allow_send_to = null;
         }
-        $mailingList->channel_order = json_encode($mailingList->channel_order);
+        $mailingList->selected_channels = json_encode($mailingList->selected_channels);
 
         $mailingList->save();
-        
+
         $mailingList->segments()->sync($request->input('segments'));
 		return new MailingListResource($mailingList);
     }

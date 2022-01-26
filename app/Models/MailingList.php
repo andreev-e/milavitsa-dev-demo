@@ -11,16 +11,13 @@ class MailingList extends Model
 
     protected $fillable = [
         'name',
-        'sms',
-        'email',
-        'telegram',
-        'whatsapp',
         'start',
         'allow_send_from',
         'allow_send_to',
         'text',
         'status',
-        'channel_order',
+        'selected_channels',
+        'email_teplate'
     ];
 
     protected $casts = [

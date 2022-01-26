@@ -46,24 +46,12 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="sms" label="SMS" sortable="custom">
+        <el-table-column prop="sms" label="Каналы" sortable="custom">
           <template slot-scope="scope">
-            <i v-if="scope.row.sms" class="el-icon-check" />
-          </template>
-        </el-table-column>
-        <el-table-column prop="email" label="Email" sortable="custom">
-          <template slot-scope="scope">
-            <i v-if="scope.row.email" class="el-icon-check" />
-          </template>
-        </el-table-column>
-        <el-table-column prop="telegram" label="Telegram" sortable="custom">
-          <template slot-scope="scope">
-            <i v-if="scope.row.telegram" class="el-icon-check" />
-          </template>
-        </el-table-column>
-        <el-table-column prop="whatsapp" label="WhatsApp" sortable="custom">
-          <template slot-scope="scope">
-            <i v-if="scope.row.whatsapp" class="el-icon-check" />
+            {{  }}
+            <el-tag v-for="(segment, index) in scope.row.selected_channels" size="mini" :key="`seg_${index}`">
+              {{ segment }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="Действия">
