@@ -360,10 +360,8 @@ export default {
       this.loading = true
       if (this.form.id === null) {
         const { data } = await mailingList.store(this.form)
-        this.form = data
       } else {
         const { data } = await mailingList.update(this.form.id, this.form)
-        this.form = data
       }
       this.loading = false
       if (!stay) {
