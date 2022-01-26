@@ -216,7 +216,7 @@ export default {
         channel_order: [],
         segments: [],
         email_teplate: null,
-        selected_channels: ['email'],
+        selected_channels: [],
       },
       pickerOptions: {
         firstDayOfWeek: 1,
