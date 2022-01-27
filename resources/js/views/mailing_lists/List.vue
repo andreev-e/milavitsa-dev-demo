@@ -92,7 +92,7 @@ export default {
       statuses: {
         blueprint: 'Черновик',
         submitted: 'Запланирована',
-        processing: 'Идет рассылка',
+        sending: 'Идет рассылка',
       }
     }
   },

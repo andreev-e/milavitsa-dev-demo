@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\MailingList;
+use App\Models\MailingMessage;
 use Carbon\Carbon;
+use App\Jobs\MailingMessageJob;
 
 class MailingWork extends Command
 {
@@ -39,13 +41,32 @@ class MailingWork extends Command
      */
     public function handle()
     {
-        $this->info('Проверка рассылок');
         $readytosend = MailingList::where('status', 'submitted')
-            ->where('start', '<', Carbon::now())->get();
-        dd(count($readytosend));
+            ->where('start', '<', Carbon::now())
+            ->orderBy('start', 'asc')
+            ->get();
         foreach($readytosend as $list) {
-            $list->status = 'processing';
-
+            $this->info('Генерируем сообщения для рассылки: "' . $list->name . '"');
+            foreach($list->segments as $segment) {
+                foreach($segment->clients as $client) {
+                    // dump('Каналы клиента', $client->selected_channels, 'Каналы рассылки', $list->selected_channels);
+                    $chanel_is_not_found = true;
+                    foreach ($list->selected_channels as $mailingChannel) {
+                        if ($chanel_is_not_found && in_array($mailingChannel, $client->selected_channels)) {
+                            // dump('Канал ' . $mailingChannel . ' есть в списке у клиента ' . $client->id . ', шлем');
+                            $message = MailingMessage::create([
+                                'channel' => $client->selected_channels[0],
+                                'client_id' => $client->id,
+                                'mailing_list_id' => $list->id,
+                            ]);
+                            $job = (new MailingMessageJob($message));
+                            dispatch($job);
+                            $chanel_is_not_found = false;
+                        }
+                    }
+                }
+            }
+            $list->status = 'sending';
             $list->save();
         }
         return 0;

@@ -225,4 +225,11 @@ class Client extends Model
     {
         return $this->belongsTo(Shop::class);
     }
+
+    public function getSelectedChannelsAttribute() : array
+    {
+        //TODO выбираем доступные каналы для рассылок пользователя и их приоритет
+        return ['email','telegram','sms','whatsapp'];
+    }
+
 }
