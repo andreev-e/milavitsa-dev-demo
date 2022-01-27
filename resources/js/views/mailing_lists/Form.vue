@@ -29,6 +29,7 @@
                 placeholder="Выбрать дату и время"
                 :picker-options="pickerOptions"
                 format="yyyy.MM.dd HH:mm"
+                value-format="yyyy-MM-dd HH:mm"
               />
             </el-form-item>
           </el-col>

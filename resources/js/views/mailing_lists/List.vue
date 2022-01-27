@@ -91,7 +91,8 @@ export default {
       loading: false,
       statuses: {
         blueprint: 'Черновик',
-        submitted: 'Запущена',
+        submitted: 'Запланирована',
+        processing: 'Идет рассылка',
       }
     }
   },

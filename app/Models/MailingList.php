@@ -28,4 +28,5 @@ class MailingList extends Model
     public function segments() {
         return $this->belongsToMany(MailingSegment::class);
     }
+    
 }

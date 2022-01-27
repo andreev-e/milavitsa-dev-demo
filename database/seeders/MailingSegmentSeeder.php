@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\MailingSegment;
-use App\Models\User;
+use App\Models\Client;
 
 class MailingSegmentSeeder extends Seeder
 {
@@ -16,7 +16,7 @@ class MailingSegmentSeeder extends Seeder
     public function run()
     {
         MailingSegment::factory()->count(3)->create()->each(function ($s) {
-            $s->users()->attach(User::inRandomOrder()->limit(rand(10,100))->get());
+            $s->clients()->attach(Client::inRandomOrder()->limit(rand(10,100))->get());
         });;
     }
 }
