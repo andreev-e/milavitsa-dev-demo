@@ -22,7 +22,7 @@ class MailingListResource extends JsonResource
             'allow_send_from' => substr($this->allow_send_from, 0, 5),
             'allow_send_to' => substr($this->allow_send_to, 0, 5),
             'segments' => $this->segments->pluck('id'),
-            'selected_channels' => json_decode($this->selected_channels),
+            'selected_channels' => $this->selected_channels,
             'email_teplate' => $this->email_teplate,
         ];
     }

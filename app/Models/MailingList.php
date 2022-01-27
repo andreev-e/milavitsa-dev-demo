@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\Json;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,11 +23,11 @@ class MailingList extends Model
 
     protected $casts = [
         'start' => 'datetime',
-        'start' => 'datetime',
+        'selected_channels' => Json::class,
     ];
 
     public function segments() {
         return $this->belongsToMany(MailingSegment::class);
     }
-    
+
 }

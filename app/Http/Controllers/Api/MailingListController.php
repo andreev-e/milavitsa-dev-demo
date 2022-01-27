@@ -73,7 +73,6 @@ class MailingListController extends Controller
             $mailingList->allow_send_from = null;
             $mailingList->allow_send_to = null;
         }
-        $mailingList->selected_channels = json_encode($mailingList->selected_channels);
 
         $mailingList->save();
 
