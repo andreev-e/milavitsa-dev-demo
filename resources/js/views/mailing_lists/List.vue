@@ -48,15 +48,14 @@
         </el-table-column>
         <el-table-column prop="sms" label="Каналы" sortable="custom">
           <template slot-scope="scope">
-            {{  }}
-            <el-tag v-for="(segment, index) in scope.row.selected_channels" size="mini" :key="`seg_${index}`">
-              {{ segment }}
+            <el-tag v-for="(channel, index) in scope.row.selected_channels" size="mini" :key="`chan_${index}`">
+              {{ channel }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="Действия">
           <template slot-scope="scope">
-            <el-button type="danger" size="mini" icon="el-icon-delete" round @click="drop(scope.row.id)" />
+            <el-button v-if="scope.row.status === 'blueprint' || scope.row.status === 'submitted'" type="danger" size="mini" icon="el-icon-delete" round @click="drop(scope.row.id)" />
           </template>
         </el-table-column>
       </el-table>

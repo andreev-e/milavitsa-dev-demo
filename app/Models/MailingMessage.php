@@ -16,4 +16,12 @@ class MailingMessage extends Model
         'mailing_list_id',
     ];
 
+    public function mailingList() {
+        return $this->belongsTo(MailingList::class);
+    }
+
+    public function client() {
+        return $this->belongsTo(Client::class);
+    }
+
 }
