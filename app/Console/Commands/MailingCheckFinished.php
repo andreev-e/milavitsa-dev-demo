@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\MailingList;
 
 class MailingCheckFinished extends Command
 {
@@ -37,6 +38,13 @@ class MailingCheckFinished extends Command
      */
     public function handle()
     {
+        $sending = MailingList::where('status', 'sending')->get();
+            foreach ($sending as $list) {
+                if ($list->messages->where('status', 'new')->count() === 0) {
+                    $list->status = 'finished';
+                    $list->save();
+                };
+            }
         return 0;
     }
 }

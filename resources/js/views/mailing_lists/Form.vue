@@ -9,17 +9,17 @@
         <el-row :gutter="15">
           <el-col :span="12">
             <el-form-item label="Название списка" prop="name">
-              <el-input v-model="form.name" type="text" />
+              <el-input v-model="form.name" type="text" :disabled="notEditable" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="`Текст сообщения (${messageLength} знаков)`" prop="text">
-              <el-input v-model="form.text" type="textarea" :autosize="{ minRows: 2, maxRows: 8}"/>
+              <el-input v-model="form.text" type="textarea" :autosize="{ minRows: 2, maxRows: 8}" :disabled="notEditable" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="Дата и время начала рассылки">
-              <el-switch v-model="start" active-text="Сразу" inactive-text="Запланировать" />
+              <el-switch  v-if="!notEditable" v-model="start" active-text="Сразу" inactive-text="Запланировать" />
             </el-form-item>
             <el-form-item>
               <el-date-picker
@@ -30,6 +30,7 @@
                 :picker-options="pickerOptions"
                 format="yyyy.MM.dd HH:mm"
                 value-format="yyyy-MM-dd HH:mm"
+                :disabled="notEditable"
               />
             </el-form-item>
           </el-col>
@@ -42,6 +43,7 @@
                     placeholder="C"
                     :picker-options="timeSelectOptions"
                     style="width:100%"
+                    :disabled="notEditable"
                   />
                 </el-col>
                 <el-col :span="2" style="text-align: center">
@@ -53,6 +55,7 @@
                     placeholder="По"
                     :picker-options="timeSelectOptions"
                     style="width:100%"
+                    :disabled="notEditable"
                   />
                 </el-col>
               </el-row>
@@ -60,8 +63,8 @@
           </el-col>
         </el-row>
         <el-row :gutter="15">
-          <el-col :span="12">
-            <h3>Доступные каналы</h3>
+          <el-col v-if="!notEditable" :span="12" >
+            <h2>Доступные каналы</h2>
             <draggable class="list-group" :list="channels" group="channels">
               <div
                 class="list-group-item"
@@ -73,8 +76,16 @@
             </draggable>
           </el-col>
           <el-col :span="12">
-            <h3>Выбранные каналы по порядку</h3>
-            <draggable class="list-group" :list="form.selected_channels" group="channels">
+            <h2>Выбранные каналы по порядку</h2>
+            <div v-if="notEditable">
+              <el-tag
+                v-for="(element) in form.selected_channels"
+                :key="element"
+              >
+                {{ element }}
+              </el-tag>
+            </div>
+            <draggable v-else class="list-group" :list="form.selected_channels" group="channels">
               <div
                 class="list-group-item"
                 v-for="(element) in form.selected_channels"
@@ -124,7 +135,7 @@
                 <h3>Email</h3>
               </div>
               <el-form-item label="Шаблон письма TODO">
-                <el-select v-model="form.email_teplate" clearable>
+                <el-select v-model="form.email_teplate" clearable :disabled="notEditable">
                   <el-option
                     v-for="item in mailtemplates"
                     :key="item"
@@ -142,7 +153,13 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="Выберите сегменты" prop="segments">
-              <el-select v-model="form.segments" v-loading="loadingSegments" filterable multiple>
+              <el-select
+                v-model="form.segments"
+                v-loading="loadingSegments"
+                filterable
+                multiple
+                :disabled="notEditable"
+              >
                 <el-option
                   v-for="item in segments"
                   :key="item.id"
@@ -156,11 +173,11 @@
         </el-row>
         <el-row :gutter="15">
           <el-col :span="24">
-            <el-button :type="form.start === null ? 'danger' : 'success'" @click="validate">
+            <el-button v-if="!notEditable" :type="form.start === null ? 'danger' : 'success'" @click="validate">
               <span v-if="form.start === null">Запустить сразу</span>
               <span v-else>Запланировать</span>
             </el-button>
-            <el-button v-if="form.name" type="default" @click="blueprint">Сохранить в черновик</el-button>
+            <el-button v-if="form.name && !notEditable" type="default" @click="blueprint">Сохранить в черновик</el-button>
           </el-col>
         </el-row>
       </el-card>
@@ -280,6 +297,11 @@ export default {
   watch: {
   },
   computed: {
+    notEditable: {
+      get: function () {
+        return this.form.status === 'sending' || this.form.status === 'finished';
+      },
+    },
     messageLength: {
       get: function () {
         return this.form.text ? this.form.text.length : 0;

@@ -7,6 +7,7 @@ use App\Models\MailingList;
 use Illuminate\Http\Request;
 use App\Http\Resources\MailingListCollection;
 use App\Http\Resources\MailingListResource;
+use Carbon\Carbon;
 
 class MailingListController extends Controller
 {
@@ -62,14 +63,22 @@ class MailingListController extends Controller
      */
     public function update(Request $request, MailingList $mailingList)
     {
+        if (in_array($mailingList->status, ['sending', 'finished'])) {
+            return;
+        }
         $mailingList->fill($request->all());
 
-        $minTime = min($mailingList->allow_send_from, $mailingList->allow_send_to);
-        $maxTime = max($mailingList->allow_send_from, $mailingList->allow_send_to);
-        if ($maxTime && $minTime && $maxTime != $minTime) {
-            $mailingList->allow_send_from = $minTime;
-            $mailingList->allow_send_to = $maxTime;
-        } else {
+        $from = Carbon::createFromFormat('H:i', $mailingList->allow_send_from);
+        $to = Carbon::createFromFormat('H:i', $mailingList->allow_send_to);
+
+        if ($from->lt($to)) {
+            $mailingList->allow_send_from = $from->format('H:i');
+            $mailingList->allow_send_to = $to->format('H:i');
+        } elseif ($from->gt($to)) {
+            $mailingList->allow_send_from = $to->format('H:i');
+            $mailingList->allow_send_to = $from->format('H:i');
+        }
+        else {
             $mailingList->allow_send_from = null;
             $mailingList->allow_send_to = null;
         }

@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\MailingMessage;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
 use App\Mail\Mailing;
 
 class MailingSendEmail extends Command
@@ -52,10 +51,9 @@ class MailingSendEmail extends Command
                     $message->status = 'ok';
                     $message->save();
                 } catch(\Exception $e) {
-                    Log::error($e);
                     $message->status = 'failed';
                     $message->save();
-                    // TODO: ставим в очередь новый канал
+                    $message->queueNext();
                 }
             }
         }

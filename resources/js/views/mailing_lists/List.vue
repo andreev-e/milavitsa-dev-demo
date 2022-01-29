@@ -55,7 +55,8 @@
         </el-table-column>
         <el-table-column prop="name" label="Действия">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.status === 'blueprint' || scope.row.status === 'submitted'" type="danger" size="mini" icon="el-icon-delete" round @click="drop(scope.row.id)" />
+            <el-button v-if="scope.row.status === 'blueprint' ||
+              scope.row.status === 'submitted' || scope.row.status === 'finished'" type="danger" size="mini" icon="el-icon-delete" round @click="drop(scope.row.id)" />
           </template>
         </el-table-column>
       </el-table>
@@ -92,6 +93,7 @@ export default {
         blueprint: 'Черновик',
         submitted: 'Запланирована',
         sending: 'Идет рассылка',
+        finished: 'Завершена',
       }
     }
   },

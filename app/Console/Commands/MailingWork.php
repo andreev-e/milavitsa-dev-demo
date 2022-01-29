@@ -42,6 +42,15 @@ class MailingWork extends Command
     {
         $readytosend = MailingList::where('status', 'submitted')
             ->where('start', '<', Carbon::now())
+            ->where(function ($q) {
+                $q->orWhere(function ($orWhere) {
+                    $orWhere->whereNull('allow_send_from')
+                        ->whereNull('allow_send_to');
+                })->orWhere(function ($orWhere) {
+                    $orWhere->where('allow_send_from', '<', Carbon::now()->format('H:i:s'))
+                        ->where('allow_send_to', '>', Carbon::now()->format('H:i:s'));
+                });
+            })
             ->orderBy('start', 'asc')
             ->get();
         foreach($readytosend as $list) {
@@ -52,8 +61,8 @@ class MailingWork extends Command
                     foreach ($list->selected_channels as $mailingChannel) {
                         if ($chanel_is_not_found && in_array($mailingChannel, $client->selected_channels)) {
                             // dump('Канал ' . $mailingChannel . ' есть в списке у клиента ' . $client->id . ', шлем');
-                            $message = MailingMessage::create([
-                                'channel' => $client->selected_channels[0],
+                            MailingMessage::create([
+                                'channel' => $mailingChannel,
                                 'client_id' => $client->id,
                                 'mailing_list_id' => $list->id,
                             ]);
