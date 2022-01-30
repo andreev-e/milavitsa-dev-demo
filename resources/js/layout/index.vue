@@ -13,6 +13,7 @@
 
 <script>
 import Menu from '../layout/components/Menu';
+import 'element-ui/lib/theme-chalk/display.css';
 
 export default {
   components: { Menu },
@@ -20,7 +21,7 @@ export default {
 </script>
 
 <style>
-a{
+a {
   text-decoration: none;
   color: #409EFF;
 }
@@ -32,11 +33,11 @@ h1 {
   font-size: 1.8rem;
 }
 h2 {
-  display: inline;
   font-size: 1.5rem;
+  padding-bottom: 0.5rem;
 }
 h3 {
-  display: inline;
   font-size: 1.2rem;
+  padding-bottom: 0.3rem;
 }
 </style>

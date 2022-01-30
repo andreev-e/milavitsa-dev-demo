@@ -7,17 +7,17 @@
         </div>
         <h2>Общие настроки</h2>
         <el-row :gutter="15">
-          <el-col :span="12">
+          <el-col :sm="24" :md="12">
             <el-form-item label="Название списка" prop="name">
               <el-input v-model="form.name" type="text" :disabled="notEditable" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :sm="24" :md="12">
             <el-form-item :label="`Текст сообщения (${messageLength} знаков)`" prop="text">
               <el-input v-model="form.text" type="textarea" :autosize="{ minRows: 2, maxRows: 8}" :disabled="notEditable" />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :sm="24" :md="8">
             <el-form-item label="Дата и время начала рассылки">
               <el-switch  v-if="!notEditable" v-model="start" active-text="Сразу" inactive-text="Запланировать" />
             </el-form-item>
@@ -34,8 +34,8 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
-            <el-form-item label="Диапазон времени доставки сообщений" prop="allow_send">
+          <el-col :sm="24" :md="8">
+            <el-form-item label="Диапазон времени отправки сообщений" prop="allow_send">
               <el-row>
                 <el-col :span="11">
                   <el-time-select
@@ -73,17 +73,20 @@
               >
                 {{ element }}
               </div>
+              <span v-if="channels.length === 0">перетащите сюда</span>
             </draggable>
           </el-col>
           <el-col :span="12">
-            <h2>Выбранные каналы по порядку</h2>
+            <h2>Выбранные каналы</h2>
             <div v-if="notEditable">
-              <el-tag
-                v-for="(element) in form.selected_channels"
-                :key="element"
-              >
-                {{ element }}
-              </el-tag>
+              <ul>
+                <li
+                  v-for="(element) in form.selected_channels"
+                  :key="element"
+                >
+                  {{ element }}
+                </li>
+              </ul>
             </div>
             <draggable v-else class="list-group" :list="form.selected_channels" group="channels">
               <div
@@ -93,6 +96,7 @@
               >
                 {{ element }}
               </div>
+              <span v-if="form.selected_channels.length === 0">перетащите сюда</span>
             </draggable>
           </el-col>
         </el-row>
@@ -100,14 +104,8 @@
           <el-col :span="24">
             <h2>Настройки каналов</h2>
           </el-col>
-          <el-col v-if="form.selected_channels.indexOf('telegram') !== -1" :span="24" id="telegram">
-            <el-card class="equal_height">
-              <div slot="header">
-                <h3>Telegram</h3>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col v-if="form.selected_channels.indexOf('whatsapp') !== -1" :span="24" id="whatsapp">
+
+          <el-col v-if="form.selected_channels.indexOf('whatsapp') !== -1" :sm="24" :md="12" id="whatsapp">
             <el-card class="equal_height">
               <div slot="header">
                 <h3>Whatsapp</h3>
@@ -118,7 +116,7 @@
               <p>Стоимость рассылки {{ whatsappPrice }} руб.</p>
             </el-card>
           </el-col>
-          <el-col v-if="form.selected_channels.indexOf('sms') !== -1" :span="24" id="sms">
+          <el-col v-if="form.selected_channels.indexOf('sms') !== -1" :sm="24" :md="12" id="sms">
             <el-card class="equal_height">
               <div slot="header">
                 <h3>SMS</h3>
@@ -129,7 +127,7 @@
               <p>Стоимость рассылки {{ smsPrice }} руб.</p>
             </el-card>
           </el-col>
-          <el-col v-if="form.selected_channels.indexOf('email') !== -1" :span="24" id="email">
+          <el-col v-if="form.selected_channels.indexOf('email') !== -1" :sm="24" :md="12" id="email">
             <el-card class="equal_height">
               <div slot="header">
                 <h3>Email</h3>
@@ -146,12 +144,19 @@
               </el-form-item>
             </el-card>
           </el-col>
+          <el-col v-if="form.selected_channels.indexOf('telegram') !== -1" :sm="24" :md="12" id="telegram">
+            <el-card class="equal_height">
+              <div slot="header">
+                <h3>Telegram</h3>
+              </div>
+            </el-card>
+          </el-col>
         </el-row>
         <el-row :gutter="15">
           <el-col :span="24">
             <h2>Сегменты</h2>
           </el-col>
-          <el-col :span="12">
+          <el-col :sm="24" :md="8">
             <el-form-item label="Выберите сегменты" prop="segments">
               <el-select
                 v-model="form.segments"
@@ -173,11 +178,30 @@
         </el-row>
         <el-row :gutter="15">
           <el-col :span="24">
-            <el-button v-if="!notEditable" :type="form.start === null ? 'danger' : 'success'" @click="validate">
-              <span v-if="form.start === null">Запустить сразу</span>
-              <span v-else>Запланировать</span>
-            </el-button>
-            <el-button v-if="form.name && !notEditable" type="default" @click="blueprint">Сохранить в черновик</el-button>
+            <el-button-group>
+              <el-button
+                v-if="!notEditable"
+                :type="form.start === null ? 'danger' : 'success'"
+                icon="el-icon-video-play"
+                @click="validate"
+              >
+                <span class="hidden-xs-only">
+                  <span v-if="form.start === null">Запустить сразу</span>
+                  <span v-else>Запланировать</span>
+                </span>
+              </el-button>
+              <el-button
+                v-if="form.name && !notEditable"
+                type="default"
+                icon="el-icon-document"
+                @click="blueprint"
+              >
+                <span class="hidden-xs-only">Сохранить в черновик</span>
+              </el-button>
+              <el-button v-if="form.id" type="default" icon="el-icon-document-copy" @click="makeCopy">
+                <span class="hidden-xs-only">Сделать копию</span>
+              </el-button>
+            </el-button-group>
           </el-col>
         </el-row>
       </el-card>
@@ -188,6 +212,7 @@
 <script>
 import draggable from 'vuedraggable'
 import MailingListResource from '@/api/mailing_list.js'
+import { Copy } from '@/api/mailing_list.js'
 import MailingSegmentResource from '@/api/mailing_segments.js'
 
 const mailingList = new MailingListResource();
@@ -379,13 +404,33 @@ export default {
       this.form.status = 'blueprint';
       this.save(true)
     },
+    async makeCopy() {
+      this.loading = true
+      const { data } = await Copy(this.form.id)
+      if (data && data.id) {
+        this.form = data
+        this.loading = false
+        this.$message.success('Копия создана');
+        this.$router.push({ name: 'mailing-list', params: { id: this.form.id }})
+      } else {
+        this.$message.error('Ошибка при копировании');
+      }
+
+    },
     async save(stay = false) {
       this.loading = true
       if (this.form.id === null) {
         const { data } = await mailingList.store(this.form)
+        if (data && data.id) {
+          this.form = data
+        }
       } else {
         const { data } = await mailingList.update(this.form.id, this.form)
+        if (data && data.id) {
+          this.form = data
+        }
       }
+
       this.loading = false
       if (!stay) {
         this.$router.push({name: 'mailing-lists-list'})
@@ -424,5 +469,9 @@ export default {
     margin-bottom: 0;
     min-height:20px;
     background-color: #F0F0F0;
+    text-align:center;
+  }
+  .el-button {
+    margin-bottom:5px;
   }
 </style>

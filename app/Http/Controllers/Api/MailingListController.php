@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\MailingList;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Resources\MailingListCollection;
 use App\Http\Resources\MailingListResource;
 use Carbon\Carbon;
@@ -99,4 +100,18 @@ class MailingListController extends Controller
     {
         $mailingList->delete();
     }
+
+    public function copy(Request $request)
+    {
+        $old = MailingList::findOrFail($request->input('id'));
+        $new = $old->replicate();
+        $new->name = 'Копия ' . $new->name;
+        $new->start = null;
+        $new->status = 'blueprint';
+        $new->save();
+        $new->segments()->sync($old->segments);
+        return new MailingListResource($new);
+    }
+
+
 }

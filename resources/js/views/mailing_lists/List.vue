@@ -13,12 +13,12 @@
       >
         <el-table-column prop="id" label="ID" sortable="custom" width="75px">
           <template slot-scope="scope">
-            <router-link :to="`mailing_lists/${scope.row.id}`">{{ scope.row.id }}</router-link>
+            <router-link :to="{ name: 'mailing-list', params: { id: scope.row.id }}">{{ scope.row.id }}</router-link>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="Название" sortable="custom">
           <template slot-scope="scope">
-            <router-link :to="`mailing_lists/${scope.row.id}`">{{ scope.row.name }}</router-link>
+            <router-link :to="{ name: 'mailing-list', params: { id: scope.row.id }}">{{ scope.row.name }}</router-link>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="Статус" sortable="custom">
@@ -55,8 +55,22 @@
         </el-table-column>
         <el-table-column prop="name" label="Действия">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.status === 'blueprint' ||
-              scope.row.status === 'submitted' || scope.row.status === 'finished'" type="danger" size="mini" icon="el-icon-delete" round @click="drop(scope.row.id)" />
+            <el-button
+              type="default"
+              size="mini"
+              icon="el-icon-document-copy"
+              round
+              @click="makeCopy(scope.row.id)"
+            />
+            <el-button
+              v-if="scope.row.status === 'blueprint' ||
+              scope.row.status === 'submitted' || scope.row.status === 'finished'"
+              type="danger"
+              size="mini"
+              icon="el-icon-delete"
+              round
+              @click="drop(scope.row.id)"
+            />
           </template>
         </el-table-column>
       </el-table>
@@ -74,6 +88,7 @@
 <script>
 import Pagination from '@/components/Pagination';
 import MailingListResource from '@/api/mailing_list.js'
+import { Copy } from '@/api/mailing_list.js'
 
 const mailingList = new MailingListResource();
 
@@ -109,7 +124,13 @@ export default {
       this.loading = false
     },
     create() {
-      this.$router.push('/admin/mailing_lists/create')
+      this.$router.push({ name: 'mailing-list-create' })
+    },
+    async makeCopy(id) {
+      this.loading = true
+      await Copy(id)
+      this.loading = false
+      this.loadList();
     },
     async deleteItem(id) {
       this.loading = true
