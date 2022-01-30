@@ -45,8 +45,8 @@ class MailingSendSms extends Command
                 if (!$message->client->isBlackListed()) {
                     $phone = $message->client->phone[0];
                     $text = $message->mailingList->text;
-                    $api = new IDigitalService;
-                    dd($api->smsSendBulk([$phone], $text));
+                    // $api = new IDigitalService;
+                    // dd($api->smsSendBulk([$phone], $text));
                     try {
                         // TODO:
 
