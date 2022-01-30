@@ -8,7 +8,7 @@
         <h2>Общие настроки</h2>
         <el-row :gutter="15">
           <el-col :sm="24" :md="12">
-            <el-form-item label="Название списка" prop="name">
+            <el-form-item label="Название списка (так же будет являться темой темой письма)" prop="name">
               <el-input v-model="form.name" type="text" :disabled="notEditable" />
             </el-form-item>
           </el-col>
@@ -132,8 +132,8 @@
               <div slot="header">
                 <h3>Email</h3>
               </div>
-              <el-form-item label="Шаблон письма TODO">
-                <el-select v-model="form.email_teplate" clearable :disabled="notEditable">
+              <el-form-item label="Шаблон письма">
+                <el-select v-loading="loadingTemplates" v-model="form.email_teplate" clearable :disabled="notEditable">
                   <el-option
                     v-for="item in mailtemplates"
                     :key="item"
@@ -168,7 +168,7 @@
                 <el-option
                   v-for="item in segments"
                   :key="item.id"
-                  :label="`${item.name} - ${item.volume} чел.`"
+                  :label="`${item.type === 'auto' ? '[Авто] ' : ''}${item.name} - ${item.volume} чел.`"
                   :value="item.id">
                 </el-option>
               </el-select>
@@ -213,10 +213,12 @@
 import draggable from 'vuedraggable'
 import MailingListResource from '@/api/mailing_list.js'
 import { Copy } from '@/api/mailing_list.js'
-import MailingSegmentResource from '@/api/mailing_segments.js'
+import MailingSegmentResource from '@/api/mailing_segment.js'
+import MailingTemplateResource from '@/api/mailing_template.js'
 
 const mailingList = new MailingListResource();
 const mailingSegment = new MailingSegmentResource();
+const template = new MailingTemplateResource();
 
 const checkAllowSend = function (rule, value, callback) {
   if ((this.form.allow_send_from && this.form.allow_send_to) ||
@@ -312,14 +314,9 @@ export default {
         'whatsapp',
         'sms',
       ],
-      mailtemplates: [
-        'Темплейт 1',
-        'Темплейт 2',
-        'Темплейт 3',
-      ],
+      loadingTemplates: false,
+      mailtemplates: [],
     };
-  },
-  watch: {
   },
   computed: {
     notEditable: {
@@ -371,6 +368,7 @@ export default {
       this.loadItem();
     }
     this.loadSegments();
+    this.loadTemplates();
   },
   methods: {
     async loadItem() {
@@ -385,6 +383,12 @@ export default {
       const { data } = await mailingSegment.list()
       this.segments = data
       this.loadingSegments = false
+    },
+    async loadTemplates() {
+      this.loadingTemplates = true
+      const { data } = await template.list()
+      this.mailtemplates = data
+      this.loadingTemplates = false
     },
     validate() {
       this.$refs.form.validate((valid) => {
@@ -430,7 +434,6 @@ export default {
           this.form = data
         }
       }
-
       this.loading = false
       if (!stay) {
         this.$router.push({name: 'mailing-lists-list'})

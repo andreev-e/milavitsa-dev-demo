@@ -2312,21 +2312,10 @@ var constantRoutes = [{
       return __webpack_require__.e(/*! import() */ "resources_js_views_mailing_lists_List_vue").then(__webpack_require__.bind(__webpack_require__, /*! @/views/mailing_lists/List */ "./resources/js/views/mailing_lists/List.vue"));
     }
   }, {
-    path: 'mailing_lists/create',
-    name: 'mailing-list-create',
-    component: function component() {
-      return __webpack_require__.e(/*! import() */ "resources_js_views_mailing_lists_Form_vue").then(__webpack_require__.bind(__webpack_require__, /*! @/views/mailing_lists/Form */ "./resources/js/views/mailing_lists/Form.vue"));
-    }
-  }, {
     path: 'mailing_lists/:id',
     name: 'mailing-list',
     component: function component() {
       return __webpack_require__.e(/*! import() */ "resources_js_views_mailing_lists_Form_vue").then(__webpack_require__.bind(__webpack_require__, /*! @/views/mailing_lists/Form */ "./resources/js/views/mailing_lists/Form.vue"));
-    }
-  }, {
-    path: 'statistics',
-    component: function component() {
-      return __webpack_require__.e(/*! import() */ "resources_js_views_Statistics_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../views/Statistics */ "./resources/js/views/Statistics.vue"));
     }
   }]
 }];
@@ -2358,7 +2347,7 @@ function resetRouter() {
   var newRouter = createRouter();
   router.matcher = newRouter.matcher; // reset router
 }
-var DEFAULT_TITLE = 'Vue Router';
+var DEFAULT_TITLE = 'Milavitsa-demo';
 router.afterEach(function (to, from) {
   // Use next tick to handle router history correctly
   // see: https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
@@ -83372,7 +83361,7 @@ Vue.compile = compileToFunctions;
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_views_mailing_lists_List_vue":1,"resources_js_views_mailing_lists_Form_vue":1,"resources_js_views_Statistics_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_views_mailing_lists_List_vue":1,"resources_js_views_mailing_lists_Form_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

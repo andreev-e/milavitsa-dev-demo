@@ -16,7 +16,7 @@ class MailingSegmentController extends Controller
      */
     public function index(Request $request)
     {
-        $list = MailingSegment::select();
+        $list = MailingSegment::select()->where('type', '<>', 'black');
         return MailingSegmentCollection::collection($list->paginate($request->limit));
     }
 

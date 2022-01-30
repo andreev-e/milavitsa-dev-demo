@@ -18,20 +18,10 @@ export const constantRoutes = [
         component: () => import('@/views/mailing_lists/List'),
       },
       {
-        path: 'mailing_lists/create',
-        name: 'mailing-list-create',
-        component: () => import('@/views/mailing_lists/Form'),
-      },
-      {
         path: 'mailing_lists/:id',
         name: 'mailing-list',
         component: () => import('@/views/mailing_lists/Form'),
       },
-
-      {
-        path: 'statistics',
-        component: () => import('../views/Statistics'),
-      }
     ],
   },
 ];
@@ -62,7 +52,7 @@ export function resetRouter() {
   router.matcher = newRouter.matcher; // reset router
 }
 
-const DEFAULT_TITLE = 'Vue Router';
+const DEFAULT_TITLE = 'Milavitsa-demo';
 router.afterEach((to, from) => {
   // Use next tick to handle router history correctly
   // see: https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609

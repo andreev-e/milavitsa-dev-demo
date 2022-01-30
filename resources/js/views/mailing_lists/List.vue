@@ -55,22 +55,25 @@
         </el-table-column>
         <el-table-column prop="name" label="Действия">
           <template slot-scope="scope">
-            <el-button
-              type="default"
-              size="mini"
-              icon="el-icon-document-copy"
-              round
-              @click="makeCopy(scope.row.id)"
-            />
-            <el-button
-              v-if="scope.row.status === 'blueprint' ||
-              scope.row.status === 'submitted' || scope.row.status === 'finished'"
-              type="danger"
-              size="mini"
-              icon="el-icon-delete"
-              round
-              @click="drop(scope.row.id)"
-            />
+            <el-button-group>
+              <el-tooltip class="item" effect="dark" content="Сделать копию" placement="top">
+                <el-button
+                  type="default"
+                  size="mini"
+                  icon="el-icon-document-copy"
+                  @click="makeCopy(scope.row.id)"
+                />
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="Удалить" placement="top">
+                <el-button
+                  v-if="scope.row.status !== 'sending'"
+                  type="danger"
+                  size="mini"
+                  icon="el-icon-delete"
+                  @click="drop(scope.row.id)"
+                />
+              </el-tooltip>
+            </el-button-group>
           </template>
         </el-table-column>
       </el-table>
@@ -124,7 +127,7 @@ export default {
       this.loading = false
     },
     create() {
-      this.$router.push({ name: 'mailing-list-create' })
+      this.$router.push({ name: 'mailing-list', params: { id: 'create' }})
     },
     async makeCopy(id) {
       this.loading = true

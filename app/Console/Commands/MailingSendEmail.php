@@ -43,18 +43,27 @@ class MailingSendEmail extends Command
         $messages = MailingMessage::where('channel', 'email')->where('status', 'new')->limit(100)->get();
         foreach ($messages as $message) {
             if (!empty($message->client->email)) {
-                $email_addr = $message->client->email[0];
-                $text = $message->mailingList->text;
-                $template = $message->mailingList->email_teplate;
-                try {
-                    Mail::to($email_addr)->send(new Mailing($text, $template));
-                    $message->status = 'ok';
+                if (!$message->client->isBlackListed()) {
+                    $email_addr = $message->client->email[0];
+                    $text = $message->mailingList->text;
+                    $template = $message->mailingList->email_teplate;
+                    $subj = $message->mailingList->name;
+                    try {
+                        Mail::to($email_addr)->send(new Mailing($text, $subj, $template));
+                        $message->status = 'ok';
+                        $message->save();
+                    } catch(\Exception $e) {
+                        $message->status = 'failed';
+                        $message->save();
+                        $message->queueNext();
+                    }
+                } else {
+                    $message->status = 'black';
                     $message->save();
-                } catch(\Exception $e) {
-                    $message->status = 'failed';
-                    $message->save();
-                    $message->queueNext();
                 }
+            } else {
+                $message->status = 'failed';
+                $message->save();
             }
         }
         return 0;

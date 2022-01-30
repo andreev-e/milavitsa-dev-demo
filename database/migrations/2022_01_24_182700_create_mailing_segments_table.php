@@ -16,6 +16,7 @@ class CreateMailingSegmentsTable extends Migration
         Schema::create('mailing_segments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('type')->default('segment');
             $table->softDeletes();
             $table->timestamps();
         });

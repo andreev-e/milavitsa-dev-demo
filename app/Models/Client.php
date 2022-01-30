@@ -232,4 +232,14 @@ class Client extends Model
         return ['email','telegram','sms','whatsapp'];
     }
 
+    public function segments()
+    {
+        return $this->belongsToMany(MailingSegment::class, 'client_mailing_segment');
+    }
+
+    public function isBlackListed() {
+        // TODO: дополнить проверку - черный список на основе отдельных номеров и емейлов
+        return $this->segments()->where('type', '=', 'black')->count() !== 0;
+    }
+
 }

@@ -1,12 +1,13 @@
 @component('mail::message')
-# Introduction
+# {{ $subj }}
 
-The body of your message.
+{{ $text }}
 
 @component('mail::button', ['url' => ''])
-Button Text
+Кнопочка
 @endcomponent
 
-Thanks,<br>
+Спасибо за внимание,<br>
 {{ config('app.name') }}
+<!-- Шаблон shablon -->
 @endcomponent
