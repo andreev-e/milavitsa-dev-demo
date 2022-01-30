@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\MailingMessage;
 
-class MailingSendSms extends Command
+class MailingSendWhatsapp extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mailing:sendSms';
+    protected $signature = 'mailing:sendWhatsapp';
 
     /**
      * The console command description.

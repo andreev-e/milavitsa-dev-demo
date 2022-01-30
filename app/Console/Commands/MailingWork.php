@@ -40,7 +40,7 @@ class MailingWork extends Command
      */
     public function handle()
     {
-        $readytosend = MailingList::where('status', 'submitted')
+        $readytosend = MailingList::whereIn('status', ['submitted', 'continued'])
             ->where('start', '<', Carbon::now())
             ->where(function ($q) {
                 $q->orWhere(function ($orWhere) {
@@ -54,23 +54,38 @@ class MailingWork extends Command
             ->orderBy('start', 'asc')
             ->get();
         foreach($readytosend as $list) {
+            $counter = 0;
             $this->info('Генерируем сообщения для рассылки: "' . $list->name . '"');
+            dump($list->status, $list->chunk);
             foreach($list->segments as $segment) {
                 foreach($segment->clients as $client) {
                     $chanel_is_not_found = true;
                     foreach ($list->selected_channels as $mailingChannel) {
-                        if ($chanel_is_not_found && in_array($mailingChannel, $client->selected_channels)) {
-                            // dump('Канал ' . $mailingChannel . ' есть в списке у клиента ' . $client->id . ', шлем');
-                            MailingMessage::create([
-                                'channel' => $mailingChannel,
-                                'client_id' => $client->id,
-                                'mailing_list_id' => $list->id,
-                            ]);
+                        if ($chanel_is_not_found &&
+                            in_array($mailingChannel, $client->selected_channels) &&
+                            ($list->chunk === null || $counter < $list->chunk || $list->status === 'continued')
+                        ) {
+                            $counter++;
+                            echo $counter . PHP_EOL;
+                            if ($list->status === 'submitted' ||
+                                ($list->status === 'continued' && $list->chunk < $counter)) {
+                                echo 'message' . PHP_EOL;
+                                MailingMessage::create([
+                                    'channel' => $mailingChannel,
+                                    'client_id' => $client->id,
+                                    'mailing_list_id' => $list->id,
+                                ]);
+                            } else {
+                                echo 'skip' . PHP_EOL;
+                            }
                             $chanel_is_not_found = false;
                         }
                     }
                 }
             }
+            if ($list->status === 'continued') {
+                $list->chunk = null;
+            };
             $list->status = 'sending';
             $list->save();
         }

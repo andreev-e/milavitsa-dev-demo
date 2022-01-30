@@ -19,7 +19,8 @@ class MailingList extends Model
         'text',
         'status',
         'selected_channels',
-        'email_teplate'
+        'email_teplate',
+        'chunk',
     ];
 
     protected $casts = [

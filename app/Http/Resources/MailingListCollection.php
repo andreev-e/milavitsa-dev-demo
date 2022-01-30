@@ -23,6 +23,7 @@ class MailingListCollection extends JsonResource
             'allow_send_to' => substr($this->allow_send_to, 0, 5),
             'status' => $this->status,
             'segments' => $this->segments->pluck('name', 'id'),
+            'chunk' => $this->chunk,
         ];
     }
 }

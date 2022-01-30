@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\MailingList;
+use App\Models\MailingMessage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Resources\MailingListCollection;
 use App\Http\Resources\MailingListResource;
+use App\Http\Resources\MailingStatisticCollection;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class MailingListController extends Controller
 {
@@ -111,6 +114,18 @@ class MailingListController extends Controller
         $new->save();
         $new->segments()->sync($old->segments);
         return new MailingListResource($new);
+    }
+
+    public function statistic($id, Request $request) {
+        $list = MailingMessage::select(
+                'channel',
+                'status',
+                DB::raw("count(*) as total"),
+            )
+            ->where('mailing_list_id', $id)
+            ->groupBy('channel', 'status');
+
+        return MailingStatisticCollection::collection($list->get());
     }
 
 

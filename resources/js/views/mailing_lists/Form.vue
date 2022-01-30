@@ -3,7 +3,12 @@
     <el-form :model="form" :rules="rules" ref="form" label-position="top">
       <el-card v-loading="loading">
         <div slot="header" class="clearfix">
-          <h1>Рассылка</h1>
+          <h1>
+            Рассылка
+            <span v-if="form.status">
+              [{{ statuses[form.status] }}]
+            </span>
+          </h1>
         </div>
         <h2>Общие настроки</h2>
         <el-row :gutter="15">
@@ -154,9 +159,9 @@
         </el-row>
         <el-row :gutter="15">
           <el-col :span="24">
-            <h2>Сегменты</h2>
+            <h2>Сегменты и частичная отправка</h2>
           </el-col>
-          <el-col :sm="24" :md="8">
+          <el-col :sm="24" :md="12">
             <el-form-item label="Выберите сегменты" prop="segments">
               <el-select
                 v-model="form.segments"
@@ -175,12 +180,29 @@
               <p>Всего {{ totalUsers }} чел.</p>
             </el-form-item>
           </el-col>
+          <el-col :sm="24" :md="12">
+            <el-form-item label="Отправка только тестовой части">
+              <el-select
+                v-model="form.chunk"
+                v-loading="loadingSegments"
+                clearable
+                :disabled="notEditable"
+              >
+                <el-option
+                  v-for="item in [5, 10, 100]"
+                  :key="item"
+                  :label="`${item} чел.`"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row :gutter="15">
           <el-col :span="24">
             <el-button-group>
               <el-button
-                v-if="!notEditable"
+                v-if="!notEditable && form.status !== 'partial'"
                 :type="form.start === null ? 'danger' : 'success'"
                 icon="el-icon-video-play"
                 @click="validate"
@@ -189,6 +211,14 @@
                   <span v-if="form.start === null">Запустить сразу</span>
                   <span v-else>Запланировать</span>
                 </span>
+              </el-button>
+              <el-button
+                v-if="form.status === 'partial'"
+                icon="el-icon-video-play"
+                type="success"
+                @click="continueSend"
+              >
+                Завершить
               </el-button>
               <el-button
                 v-if="form.name && !notEditable"
@@ -204,6 +234,12 @@
             </el-button-group>
           </el-col>
         </el-row>
+        <el-row v-if="notEditable" :gutter="15">
+          <el-col :span="24">
+            <h2>Стастистика рассылки</h2>
+            <Statistics :id="form.id"/>
+          </el-col>
+        </el-row>
       </el-card>
     </el-form>
   </div>
@@ -215,6 +251,8 @@ import MailingListResource from '@/api/mailing_list.js'
 import { Copy } from '@/api/mailing_list.js'
 import MailingSegmentResource from '@/api/mailing_segment.js'
 import MailingTemplateResource from '@/api/mailing_template.js'
+import { mailing_lists_statuses } from '@/const/lists'
+import Statistics from '@/views/mailing_lists/components/statistic'
 
 const mailingList = new MailingListResource();
 const mailingSegment = new MailingSegmentResource();
@@ -238,7 +276,7 @@ const checkChannels = function (rule, value, callback) {
 };
 
 export default {
-  components: { draggable },
+  components: { draggable, Statistics },
   data() {
     return {
       loading: false,
@@ -262,6 +300,7 @@ export default {
         segments: [],
         email_teplate: null,
         selected_channels: [],
+        chunk: null,
       },
       pickerOptions: {
         firstDayOfWeek: 1,
@@ -321,7 +360,7 @@ export default {
   computed: {
     notEditable: {
       get: function () {
-        return this.form.status === 'sending' || this.form.status === 'finished';
+        return this.form.status === 'sending' || this.form.status === 'finished' || this.form.status === 'continued' || this.form.status === 'partial';
       },
     },
     messageLength: {
@@ -369,6 +408,7 @@ export default {
     }
     this.loadSegments();
     this.loadTemplates();
+    this.statuses = mailing_lists_statuses;
   },
   methods: {
     async loadItem() {
@@ -389,6 +429,10 @@ export default {
       const { data } = await template.list()
       this.mailtemplates = data
       this.loadingTemplates = false
+    },
+    continueSend() {
+      this.form.status = 'continued';
+      this.save()
     },
     validate() {
       this.$refs.form.validate((valid) => {

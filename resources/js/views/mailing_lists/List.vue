@@ -16,9 +16,15 @@
             <router-link :to="{ name: 'mailing-list', params: { id: scope.row.id }}">{{ scope.row.id }}</router-link>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="Название" sortable="custom">
+        <el-table-column prop="name" label="Тема" sortable="custom">
           <template slot-scope="scope">
             <router-link :to="{ name: 'mailing-list', params: { id: scope.row.id }}">{{ scope.row.name }}</router-link>
+          </template>
+        </el-table-column>
+        <el-table-column prop="chunk" label="Фрагмент" sortable="custom">
+          <template slot-scope="scope">
+            <span v-if="scope.row.chunk">{{ scope.row.chunk }} чел.</span>
+            <span v-else>Целиком</span>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="Статус" sortable="custom">
@@ -92,7 +98,7 @@
 import Pagination from '@/components/Pagination';
 import MailingListResource from '@/api/mailing_list.js'
 import { Copy } from '@/api/mailing_list.js'
-
+import { mailing_lists_statuses } from '@/const/lists.js'
 const mailingList = new MailingListResource();
 
 export default {
@@ -106,17 +112,12 @@ export default {
         page: 1,
         sort: { prop: 'id', order: 'descending' }
       },
-      loading: false,
-      statuses: {
-        blueprint: 'Черновик',
-        submitted: 'Запланирована',
-        sending: 'Идет рассылка',
-        finished: 'Завершена',
-      }
+      loading: false
     }
   },
   mounted() {
     this.loadList();
+    this.statuses = mailing_lists_statuses;
   },
   methods: {
     async loadList() {

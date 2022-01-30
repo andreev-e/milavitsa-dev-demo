@@ -46,7 +46,7 @@ class MailingSendEmail extends Command
                 if (!$message->client->isBlackListed()) {
                     $email_addr = $message->client->email[0];
                     $text = $message->mailingList->text;
-                    $template = $message->mailingList->email_teplate;
+                    $template = $message->mailingList->email_teplate ? $message->mailingList->email_teplate : 'default';
                     $subj = $message->mailingList->name;
                     try {
                         Mail::to($email_addr)->send(new Mailing($text, $subj, $template));

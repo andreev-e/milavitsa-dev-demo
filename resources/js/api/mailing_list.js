@@ -15,4 +15,11 @@ export function Copy(id) {
   });
 }
 
+export function getStatistic(id) {
+  return request({
+    url: `/mailing_list/${id}/statistic/`,
+    method: 'get',
+  });
+}
+
 export { MailingListResource as default };
