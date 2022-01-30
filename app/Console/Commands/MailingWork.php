@@ -66,17 +66,13 @@ class MailingWork extends Command
                             ($list->chunk === null || $counter < $list->chunk || $list->status === 'continued')
                         ) {
                             $counter++;
-                            echo $counter . PHP_EOL;
                             if ($list->status === 'submitted' ||
                                 ($list->status === 'continued' && $list->chunk < $counter)) {
-                                echo 'message' . PHP_EOL;
                                 MailingMessage::create([
                                     'channel' => $mailingChannel,
                                     'client_id' => $client->id,
                                     'mailing_list_id' => $list->id,
                                 ]);
-                            } else {
-                                echo 'skip' . PHP_EOL;
                             }
                             $chanel_is_not_found = false;
                         }

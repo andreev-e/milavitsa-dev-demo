@@ -10,3 +10,7 @@ Route::middleware(['auth'])->namespace('Api')->group(function () {
 	Route::resource('/mailing_template', MailingTemplateController::class);
 
 });
+
+Route::namespace('Api')->group(function () {
+	Route::get('/idgtl/callback', 'IdgtlController@callback');
+});

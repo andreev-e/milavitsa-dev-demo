@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\MailingMessage;
+use App\Services\IDigitalService;
 
 class MailingSendSms extends Command
 {
@@ -42,10 +43,13 @@ class MailingSendSms extends Command
         foreach ($messages as $message) {
             if (!empty($message->client->phone)) {
                 if (!$message->client->isBlackListed()) {
-                    $email_addr = $message->client->phone[0];
+                    $phone = $message->client->phone[0];
                     $text = $message->mailingList->text;
+                    $api = new IDigitalService;
+                    dd($api->smsSendBulk([$phone], $text));
                     try {
                         // TODO:
+
                         throw new \ErrorException();
                         $message->status = 'ok';
                         $message->save();

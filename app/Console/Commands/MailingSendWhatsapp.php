@@ -44,6 +44,8 @@ class MailingSendWhatsapp extends Command
                 if (!$message->client->isBlackListed()) {
                     $email_addr = $message->client->phone[0];
                     $text = $message->mailingList->text;
+                    $api = new IDigitalService;
+                    dd($api->whatsappSendBulk([$phone], $text, $header, $footer));
                     try {
                         // TODO:
                         throw new \ErrorException();

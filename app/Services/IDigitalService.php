@@ -4,7 +4,7 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 
-class IDigitalService extends BaseService
+class IDigitalService
 {
     protected
         $link = 'https://direct.i-dgtl.ru/api/v1/message',
@@ -35,7 +35,83 @@ class IDigitalService extends BaseService
             $response = $result->getBody()->getContents();
             return $response;
         } catch (\Exception $e) {
-            return null;
+            return $e->getMessage();
         }
     }
+
+    public function smsSendBulk($phones, $text)
+    {
+        $this->token = config('idgtl.token');
+        $client = new Client();
+        $content = [];
+        foreach ($phones as $phone) {
+            $content[] = [
+                "channelType" => "SMS",
+                "senderName" => "MilaVitsa",
+                "destination" => $phone,
+                "content" => $text,
+            ];
+        }
+        try {
+            $result = $client->request('POST', $this->link,
+                [
+                    'json' => $content,
+                    'headers' =>
+                        [
+                            'Authorization' => "Bearer {$this->token}",
+                        ]
+                ],
+            );
+            $response = $result->getBody()->getContents();
+            return $response;
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function whatsappSendBulk($phones, $text, $header = null, $footer = null)
+    {
+        $this->token = config('idgtl.token');
+        $client = new Client();
+        $content = [];
+        foreach ($phones as $phone) {
+            $content[] = [
+                "channelType" => "WHATSAPP",
+                "senderName" => "MilaVitsa",
+                "destination" => $phone,
+                "callbackUrl" => config('idgtl.callback_url'),
+                "callbackEvents" => [
+                  "delivered",
+                  "read",
+                  "click"
+                ],
+                "content" => [
+                    "contentType" => "text",
+                    "text" => $text,
+                    "header" => [
+                        "text" => $header,
+                    ],
+                    "footer" => [
+                        "text" => $footer,
+                    ],
+                ]
+            ];
+        }
+        try {
+            $result = $client->request('POST', $this->link,
+                [
+                    'json' => $content,
+                    'headers' =>
+                        [
+                            'Authorization' => "Bearer {$this->token}",
+                        ]
+                ],
+            );
+            $response = $result->getBody()->getContents();
+            return $response;
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
 }
