@@ -15,8 +15,8 @@ class CreateMailingSegmentsClientsTable extends Migration
     {
         Schema::create('client_mailing_segment', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('mailing_segment_id');
-            $table->integer('client_id');
+            $table->bigInteger('mailing_segment_id');
+            $table->bigInteger('client_id');
         });
     }
 

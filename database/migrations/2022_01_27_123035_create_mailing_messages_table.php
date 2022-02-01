@@ -17,9 +17,9 @@ class CreateMailingMessagesTable extends Migration
             $table->id();
             $table->string('channel')->nullable();
             $table->string('status')->default('new');
-            $table->integer('client_id')->unsigned();
+            $table->bigInteger('client_id')->unsigned();
             // $table->foreign('client_id')->references('id')->on('clients');
-            $table->integer('mailing_list_id')->unsigned();
+            $table->bigInteger('mailing_list_id')->unsigned();
             $table->integer('opened')->default(0)->unsigned();
             // $table->foreign('mailing_list_id')->references('id')->on('mailing_lists');
             $table->timestamps();

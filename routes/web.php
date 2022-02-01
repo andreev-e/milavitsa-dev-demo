@@ -25,3 +25,4 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/pixel/{id}', 'MailingMessageController@pixel');
+Route::get('/shorturl/{slug}/{message}', 'LinkCounterController@shortUrl');
