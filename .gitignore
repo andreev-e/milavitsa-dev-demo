@@ -36,6 +36,5 @@ composer.lock
 /public/cron.txt
 /public/products.yml
 /public/productsYandex.yml
-/public/images
 /public/options
 /package-lock.json
