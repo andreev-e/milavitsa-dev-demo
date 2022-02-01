@@ -23,3 +23,5 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 });
+
+Route::get('/pixel/{id}', 'MailingMessageController@pixel');

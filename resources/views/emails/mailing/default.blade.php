@@ -9,5 +9,6 @@
 
 Спасибо за внимание,<br>
 {{ config('app.name') }}
-<!-- Шаблон shablon -->
+<img src="{{ config('app.url') }}/pixel/{{ $pixel }}" />
+<!-- Шаблон default -->
 @endcomponent

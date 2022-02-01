@@ -11,18 +11,19 @@ class Mailing extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $text, $template, $subj;
+    protected $text, $template, $subj, $pixel;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($text, $subj, $template)
+    public function __construct($text, $subj, $template, $pixel)
     {
         $this->text = $text;
         $this->subj = $subj;
         $this->template = $template;
+        $this->pixel = $pixel;
     }
 
     /**
@@ -35,7 +36,7 @@ class Mailing extends Mailable
         return $this->subject($this->subj)
             ->markdown(
                 'emails.mailing.' . $this->template,
-                ['text' => $this->text, 'subj' => $this->subj]
+                ['text' => $this->text, 'subj' => $this->subj, 'pixel' => $this->pixel]
             );
     }
 }

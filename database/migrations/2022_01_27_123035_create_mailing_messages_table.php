@@ -20,6 +20,7 @@ class CreateMailingMessagesTable extends Migration
             $table->integer('client_id')->unsigned();
             // $table->foreign('client_id')->references('id')->on('clients');
             $table->integer('mailing_list_id')->unsigned();
+            $table->integer('opened')->default(0)->unsigned();
             // $table->foreign('mailing_list_id')->references('id')->on('mailing_lists');
             $table->timestamps();
         });

@@ -26,9 +26,8 @@ class MailingMessage extends Model
 
     public function queueNext() {
         $alreadyTried = self::select('channel')
-            ->where('mailing_list_id', $this->mailing_list_id)
-            ->where('client_id', $this->client_id)->get()->pluck('channel')->toArray();
-            dump($alreadyTried);
+        ->where('mailing_list_id', $this->mailing_list_id)
+        ->where('client_id', $this->client_id)->get()->pluck('channel')->toArray();
         $chanel_is_not_found = true;
         foreach ($this->mailingList->selected_channels as $mailingChannel) {
             if ($chanel_is_not_found &&
