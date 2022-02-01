@@ -9,6 +9,7 @@
 
 Спасибо за внимание,<br>
 {{ config('app.name') }}
-<img src="{{ config('app.url') }}/pixel/{{ $pixel }}" />
+{{ config('app.url') }}/pixel/{{ $pixel }}
+<img src="{{ config('app.url') }}/pixel/{{ $pixel }}" alt="p"/>
 <!-- Шаблон default -->
 @endcomponent
