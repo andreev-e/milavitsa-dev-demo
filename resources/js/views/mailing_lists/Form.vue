@@ -109,12 +109,21 @@
           <el-col :span="24">
             <h2>Настройки каналов</h2>
           </el-col>
-
           <el-col v-if="form.selected_channels.indexOf('whatsapp') !== -1" :sm="24" :md="12" id="whatsapp">
             <el-card class="equal_height">
               <div slot="header">
                 <h3>Whatsapp</h3>
               </div>
+              <el-form-item label="Шаблон сообщения">
+                <el-select v-loading="loadingEmailTemplates" v-model="form.whatsapp_teplate" clearable :disabled="notEditable">
+                  <el-option
+                    v-for="(item, key) in whatsapptemplates"
+                    :key="key"
+                    :label="`${key}`"
+                    :value="key">
+                  </el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item label="Стоимость 1 сообщения">
                 <el-input v-model="oneWhatsapp" type="text" />
               </el-form-item>
@@ -138,9 +147,9 @@
                 <h3>Email</h3>
               </div>
               <el-form-item label="Шаблон письма">
-                <el-select v-loading="loadingTemplates" v-model="form.email_teplate" clearable :disabled="notEditable">
+                <el-select v-loading="loadingEmailTemplates" v-model="form.email_teplate" clearable :disabled="notEditable">
                   <el-option
-                    v-for="item in mailtemplates"
+                    v-for="item in emailtemplates"
                     :key="item"
                     :label="`${item}`"
                     :value="item">
@@ -250,13 +259,15 @@ import draggable from 'vuedraggable'
 import MailingListResource from '@/api/mailing_list.js'
 import { Copy } from '@/api/mailing_list.js'
 import MailingSegmentResource from '@/api/mailing_segment.js'
-import MailingTemplateResource from '@/api/mailing_template.js'
+import MailingTemplateResource from '@/api/mailing_emailtemplate.js'
+import WhatsappTemplateResource from '@/api/mailing_whatsapptemplate.js'
 import { mailing_lists_statuses } from '@/const/lists'
 import Statistics from '@/views/mailing_lists/components/statistic'
 
 const mailingList = new MailingListResource();
 const mailingSegment = new MailingSegmentResource();
-const template = new MailingTemplateResource();
+const emailTemplate = new MailingTemplateResource();
+const whatsappTemplate = new WhatsappTemplateResource();
 
 const checkAllowSend = function (rule, value, callback) {
   if ((this.form.allow_send_from && this.form.allow_send_to) ||
@@ -299,6 +310,7 @@ export default {
         channel_order: [],
         segments: [],
         email_teplate: null,
+        whatsapp_teplate: null,
         selected_channels: [],
         chunk: null,
       },
@@ -353,8 +365,10 @@ export default {
         'whatsapp',
         'sms',
       ],
-      loadingTemplates: false,
-      mailtemplates: [],
+      loadingEmailTemplates: false,
+      emailtemplates: [],
+      loadingWhatsappTemplates: false,
+      whatsapptemplates: [],
     };
   },
   computed: {
@@ -407,7 +421,8 @@ export default {
       this.loadItem();
     }
     this.loadSegments();
-    this.loadTemplates();
+    this.loadEmailTemplates();
+    this.loadWhatsappTemplates();
     this.statuses = mailing_lists_statuses;
   },
   methods: {
@@ -424,11 +439,17 @@ export default {
       this.segments = data
       this.loadingSegments = false
     },
-    async loadTemplates() {
-      this.loadingTemplates = true
-      const { data } = await template.list()
-      this.mailtemplates = data
-      this.loadingTemplates = false
+    async loadEmailTemplates() {
+      this.loadingEmailTemplates = true
+      const { data } = await emailTemplate.list()
+      this.emailtemplates = data
+      this.loadingEmailTemplates = false
+    },
+    async loadWhatsappTemplates() {
+      this.loadingWhatsappTemplates = true
+      const { data } = await whatsappTemplate.list()
+      this.whatsapptemplates = data
+      this.loadingWhatsappTemplates = false
     },
     continueSend() {
       this.form.status = 'continued';

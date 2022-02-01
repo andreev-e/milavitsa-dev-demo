@@ -25,6 +25,7 @@ class MailingListResource extends JsonResource
             'segments' => $this->segments->pluck('id'),
             'selected_channels' => $this->selected_channels,
             'email_teplate' => $this->email_teplate,
+            'whatsapp_teplate' => $this->whatsapp_teplate,
             'chunk' => $this->chunk,
         ];
     }

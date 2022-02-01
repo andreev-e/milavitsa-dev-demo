@@ -20,6 +20,7 @@ class MailingList extends Model
         'status',
         'selected_channels',
         'email_teplate',
+        'whatsapp_teplate',
         'chunk',
     ];
 

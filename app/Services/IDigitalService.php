@@ -69,7 +69,7 @@ class IDigitalService
         }
     }
 
-    public function whatsappSendBulk($phones, $text, $header = null, $footer = null)
+    public function whatsappSendBulk($phones, $text, $template)
     {
         $this->token = config('idgtl.token');
         $client = new Client();
@@ -89,10 +89,13 @@ class IDigitalService
                     "contentType" => "text",
                     "text" => $text,
                     "header" => [
-                        "text" => $header,
+                        "text" => config('whatsapptemplates.templates.' . $template . '.header'),
                     ],
                     "footer" => [
-                        "text" => $footer,
+                        "text" => config('whatsapptemplates.templates.' . $template . '.footer'),
+                    ],
+                    "footer" => [
+                        "buttons" => config('whatsapptemplates.templates.' . $template . '.buttons'),
                     ],
                 ]
             ];

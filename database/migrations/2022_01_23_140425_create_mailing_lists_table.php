@@ -25,6 +25,7 @@ class CreateMailingListsTable extends Migration
             $table->time('allow_send_from')->nullable();
             $table->time('allow_send_to')->nullable();
             $table->string('email_teplate')->nullable();
+            $table->string('whatsapp_teplate')->nullable();
             $table->string('selected_channels')->nullable();
             $table->softDeletes();
             $table->timestamps();
