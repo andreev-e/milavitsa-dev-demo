@@ -49,12 +49,13 @@ class MailingSendEmail extends Command
                     $template = $message->mailingList->email_teplate ? $message->mailingList->email_teplate : 'default';
                     $subj = $message->mailingList->name;
                     try {
-                        // TODO: remove next
+                        // TODO: remove next line
                         $email_addr = 'andreev-e@mail.ru';
                         Mail::to($email_addr)->send(new Mailing($text, $subj, $template, $message->id));
                         $message->status = 'ok';
                         $message->save();
                     } catch(\Exception $e) {
+                        echo $e->getMessage();
                         $message->status = 'failed';
                         $message->save();
                         $message->queueNext();
