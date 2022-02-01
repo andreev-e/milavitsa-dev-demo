@@ -39,20 +39,12 @@ class IDigitalService
         }
     }
 
-    public function smsSendBulk($phones, $text)
+    public function smsSendBulk($content)
     {
         $this->token = config('idgtl.token');
         $client = new Client();
-        $content = [];
-        foreach ($phones as $phone) {
-            $content[] = [
-                "channelType" => "SMS",
-                "senderName" => "MilaVitsa",
-                "destination" => $phone,
-                "content" => $text,
-            ];
-        }
         try {
+            dd($content);
             $result = $client->request('POST', $this->link,
                 [
                     'json' => $content,
@@ -69,38 +61,13 @@ class IDigitalService
         }
     }
 
-    public function whatsappSendBulk($phones, $text, $template)
+    public function whatsappSendBulk($content)
     {
         $this->token = config('idgtl.token');
         $client = new Client();
-        $content = [];
-        foreach ($phones as $phone) {
-            $content[] = [
-                "channelType" => "WHATSAPP",
-                "senderName" => "MilaVitsa",
-                "destination" => $phone,
-                "callbackUrl" => config('idgtl.callback_url'),
-                "callbackEvents" => [
-                  "delivered",
-                  "read",
-                  "click"
-                ],
-                "content" => [
-                    "contentType" => "text",
-                    "text" => $text,
-                    "header" => [
-                        "text" => config('whatsapptemplates.templates.' . $template . '.header'),
-                    ],
-                    "footer" => [
-                        "text" => config('whatsapptemplates.templates.' . $template . '.footer'),
-                    ],
-                    "footer" => [
-                        "buttons" => config('whatsapptemplates.templates.' . $template . '.buttons'),
-                    ],
-                ]
-            ];
-        }
+
         try {
+            // dd($content);
             $result = $client->request('POST', $this->link,
                 [
                     'json' => $content,

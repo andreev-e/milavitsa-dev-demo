@@ -13,5 +13,5 @@ Route::middleware(['auth'])->namespace('Api')->group(function () {
 });
 
 Route::namespace('Api')->group(function () {
-	Route::get('/idgtl/callback', 'IdgtlController@callback');
+	Route::get(config('idgtl.callback_url'), 'IdgtlController@callback');
 });

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\MailingMessage;
+use App\Services\IDigitalService;
 
 class MailingSendWhatsapp extends Command
 {
@@ -38,33 +39,62 @@ class MailingSendWhatsapp extends Command
      */
     public function handle()
     {
-        $messages = MailingMessage::where('channel', 'whatsapp')->where('status', 'new')->limit(100)->get();
+        $content = [];
+        $messages = MailingMessage::where('channel', 'whatsapp')
+            ->where('status', 'new')->limit(1000)->get();
         foreach ($messages as $message) {
             if (!empty($message->client->phone)) {
                 if (!$message->client->isBlackListed()) {
-                    $email_addr = $message->client->phone[0];
+                    $phone = $message->client->phone[0];
                     $text = $message->mailingList->text;
                     $template = $message->mailingList->whatsapp_teplate;
-                    // $api = new IDigitalService;
-                    // dd($api->whatsappSendBulk([$phone], $text, $template));
-                    try {
-                        // TODO:
-                        throw new \ErrorException();
-                        $message->status = 'ok';
-                        $message->save();
-                    } catch(\Exception $e) {
-                        $message->status = 'failed';
-                        $message->save();
-                        $message->queueNext();
-                    }
+                    $message->status = 'sending';
+                    $message->save();
+
+                    // TODO: delete next line
+                    $phone = '+79168874415';
+
+                    $content[] = [
+                        "channelType" => "WHATSAPP",
+                        "senderName" => "MilaVitsa",
+                        "destination" => $phone,
+                        "callbackUrl" => config('app.url') . '/api'. config('idgtl.callback_url'),
+                        "callbackEvents" => [
+                            "sent",
+                            "delivered",
+                            "read",
+                            "click"
+                        ],
+                        "content" => [
+                            "contentType" => "text",
+                            "text" => $text,
+                            "header" => [
+                                "text" => config('whatsapptemplates.templates.' . $template . '.header'),
+                            ],
+                            "footer" => [
+                                "text" => config('whatsapptemplates.templates.' . $template . '.footer'),
+                            ],
+                            "buttons" => config('whatsapptemplates.templates.' . $template . '.buttons'),
+                        ]
+                    ];
+
                 } else {
                     $message->status = 'black';
                     $message->save();
+                    $message->queueNext();
                 }
             } else {
                 $message->status = 'failed';
                 $message->save();
+                $message->queueNext();
             }
+        }
+
+        try {
+            $api = new IDigitalService;
+            echo $api->whatsappSendBulk($content);
+        } catch(\Exception $e) {
+            //TODO fail all messages
         }
         return 0;
     }

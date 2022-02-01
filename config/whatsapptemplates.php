@@ -8,11 +8,11 @@ return [
             'buttons' => [
                 [
                     'text' => 'текст кнопки 1',
-                    'url' => 'https://mail.ru',
+                    'url' => 'http://mail.ru',
                 ],
                 [
-                    'text' => 'текст кнопки 2',
-                    'url' => 'https://mail.ru',
+                    'text' => 'Позвонить',
+                    'phone' => '791268874415',
                 ]
             ]
         ],
@@ -24,10 +24,6 @@ return [
                     'text' => 'текст кнопки 21',
                     'url' => 'https://mail.ru',
                 ],
-                [
-                    'text' => 'текст кнопки 22',
-                    'url' => 'https://mail.ru',
-                ]
             ]
         ],
     ]
