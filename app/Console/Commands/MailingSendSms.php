@@ -47,6 +47,12 @@ class MailingSendSms extends Command
                 if (!$message->client->isBlackListed()) {
                     $phone = $message->client->phone[0];
                     $text = $message->mailingList->text;
+                    $from = intval(substr($message->mailingList->allow_send_from, 0, 2));
+                    $to = intval(substr($message->mailingList->allow_send_to, 0, 2));
+                    $hours = [];
+                    for ($i = $from; $i < $to; $i++) {
+                        $hours[] = $i;
+                    }
                     $message->status = 'sending';
                     $message->save();
 
@@ -56,7 +62,7 @@ class MailingSendSms extends Command
                     $content[] = [
                         "channelType" => "SMS",
                         "senderName" => "MilaVitsa",
-                        "callbackUrl" => config('app.url') . '/api'. config('idgtl.callback_url'),
+                        "callbackUrl" => config('app.url') . '/api'. config('idgtl.callback_url') . '/' . $message->id,
                         "callbackEvents" => [
                             "sent",
                             "delivered",
@@ -65,6 +71,7 @@ class MailingSendSms extends Command
                         ],
                         "destination" => $phone,
                         "content" => $text,
+                        "hours" => $hours,
                     ];
 
                 } else {
@@ -77,6 +84,10 @@ class MailingSendSms extends Command
                 $message->save();
                 $message->queueNext();
             }
+        }
+
+        if (count($content) === 0) {
+            return;
         }
 
         try {

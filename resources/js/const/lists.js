@@ -10,5 +10,10 @@ export const mailing_lists_statuses = {
 export const message_statuses = {
   failed: 'Не удалось отправить',
   ok: 'Ok',
-  new: 'В очереди на отправку',
+  new: 'Новое',
+  sending: 'В ожидании отправки',
+  delivered: 'Доставлено (финальный статус)',
+  undelivered: 'Не доставлено (финальный статус)',
+  unsent: 'Не отправлено (финальный статус)',
+  sent: 'Отправлено; находится в ожидании статуса',
 }

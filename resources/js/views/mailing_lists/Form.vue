@@ -158,13 +158,13 @@
               </el-form-item>
             </el-card>
           </el-col>
-          <el-col v-if="form.selected_channels.indexOf('telegram') !== -1" :sm="24" :md="12" id="telegram">
+          <!-- <el-col v-if="form.selected_channels.indexOf('telegram') !== -1" :sm="24" :md="12" id="telegram">
             <el-card class="equal_height">
               <div slot="header">
                 <h3>Telegram</h3>
               </div>
             </el-card>
-          </el-col>
+          </el-col> -->
         </el-row>
         <el-row :gutter="15">
           <el-col :span="24">
@@ -245,7 +245,7 @@
         </el-row>
         <el-row v-if="notEditable" :gutter="15">
           <el-col :span="24">
-            <h2>Стастистика рассылки</h2>
+            <h2>Статистика рассылки</h2>
             <Statistics :id="form.id"/>
           </el-col>
         </el-row>

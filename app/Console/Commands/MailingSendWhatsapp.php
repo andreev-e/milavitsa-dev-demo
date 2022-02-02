@@ -48,6 +48,12 @@ class MailingSendWhatsapp extends Command
                     $phone = $message->client->phone[0];
                     $text = $message->mailingList->text;
                     $template = $message->mailingList->whatsapp_teplate;
+                    $from = intval(substr($message->mailingList->allow_send_from, 0, 2));
+                    $to = intval(substr($message->mailingList->allow_send_to, 0, 2));
+                    $hours = [];
+                    for ($i = $from; $i < $to; $i++) {
+                        $hours[] = $i;
+                    }
                     $message->status = 'sending';
                     $message->save();
 
@@ -58,7 +64,7 @@ class MailingSendWhatsapp extends Command
                         "channelType" => "WHATSAPP",
                         "senderName" => "MilaVitsa",
                         "destination" => $phone,
-                        "callbackUrl" => config('app.url') . '/api'. config('idgtl.callback_url'),
+                        "callbackUrl" => config('app.url') . '/api'. config('idgtl.callback_url') . '/' . $message->id,
                         "callbackEvents" => [
                             "sent",
                             "delivered",
@@ -75,7 +81,8 @@ class MailingSendWhatsapp extends Command
                                 "text" => config('whatsapptemplates.templates.' . $template . '.footer'),
                             ],
                             "buttons" => config('whatsapptemplates.templates.' . $template . '.buttons'),
-                        ]
+                        ],
+                        "hours" => $hours,
                     ];
 
                 } else {
@@ -88,6 +95,10 @@ class MailingSendWhatsapp extends Command
                 $message->save();
                 $message->queueNext();
             }
+        }
+
+        if (count($content) === 0) {
+            return;
         }
 
         try {
