@@ -40,7 +40,7 @@ class MailingCheckFinished extends Command
     {
         $sending = MailingList::where('status', 'sending')->get();
             foreach ($sending as $list) {
-                if ($list->messages->where('status', 'new')->count() === 0) {
+                if ($list->messages->whereIn('status', ['new', 'sending', 'sent'])->count() === 0) {
                     if ($list->chunk === null) {
                         $list->status = 'finished';
                     } else {
