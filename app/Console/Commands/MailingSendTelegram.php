@@ -40,13 +40,15 @@ class MailingSendTelegram extends Command
     {
         $messages = MailingMessage::where('channel', 'telegram')->where('status', 'new')->limit(100)->get();
         foreach ($messages as $message) {
-            if (!empty($message->client->phone)) {
+            if (!empty($message->client->tg_id)) {
                 if (!$message->client->isBlackListed()) {
-                    $email_addr = $message->client->phone[0];
+                    $chat_id = $message->client->tg_id;
                     $text = $message->mailingList->text;
                     try {
-                        // TODO:
-                        throw new \ErrorException();
+                        TelegramSendMessage([
+                            'chat_id' => $chat_id,
+                            'text' => $text
+                        ]);
                         $message->status = 'ok';
                         $message->save();
                     } catch(\Exception $e) {

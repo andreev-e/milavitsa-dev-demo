@@ -105,7 +105,11 @@ class MailingSendWhatsapp extends Command
             $api = new IDigitalService;
             echo $api->whatsappSendBulk($content);
         } catch(\Exception $e) {
-            //TODO fail all messages
+            foreach ($messages as $message) {
+                $message->status = 'failed';
+                $message->save();
+                $message->queueNext();
+            }
         }
         return 0;
     }

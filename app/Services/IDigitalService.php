@@ -44,7 +44,7 @@ class IDigitalService
         $this->token = config('idgtl.token');
         $client = new Client();
         try {
-            dd($content);
+            // dump($content);
             $result = $client->request('POST', $this->link,
                 [
                     'json' => $content,
