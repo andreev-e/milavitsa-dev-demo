@@ -24,7 +24,7 @@
           </el-col>
           <el-col :sm="24" :md="8">
             <el-form-item label="Дата и время начала рассылки">
-              <el-switch  v-if="!notEditable" v-model="start" active-text="Сразу" inactive-text="Запланировать" />
+              <el-switch v-if="!notEditable" v-model="start" active-text="Сразу" inactive-text="Запланировать" />
             </el-form-item>
             <el-form-item>
               <el-date-picker
@@ -462,12 +462,24 @@ export default {
             this.form.start = new Date();
           }
           this.form.status = 'submitted';
-          this.save()
+          if (this.messageLength > 70 && this.form.selected_channels.indexOf('sms') !== -1) {
+            this.$confirm('Вы собираетесь создать расссылку сообщения СМС длиной более 70 знаков', 'Внимание', {
+              confirmButtonText: 'Подтверждаю',
+              cancelButtonText: 'Отменить',
+              type: 'warning'
+            }).then(() => {
+              this.save();
+            }).catch(() => {
+            });
+          } else {
+            this.save();
+          }
         } else {
           this.$message.error('Не все поля правильно заполнены')
           return false;
         }
       });
+
     },
     blueprint() {
       this.form.status = 'blueprint';
