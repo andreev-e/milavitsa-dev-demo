@@ -125,7 +125,9 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="Стоимость 1 сообщения">
-                <el-input v-model="oneWhatsapp" type="text" />
+                <el-input v-model="oneWhatsapp" type="text" style="width: 130px;">
+                  <template slot="append">руб.</template>
+                </el-input>
               </el-form-item>
               <p>Стоимость рассылки {{ whatsappPrice }} руб.</p>
             </el-card>
@@ -136,7 +138,9 @@
                 <h3>SMS</h3>
               </div>
               <el-form-item label="Стоимость 1 сообщения">
-                <el-input v-model="oneSms" type="text" />
+                <el-input v-model="oneSms" type="text" style="width: 130px;">
+                  <template slot="append">руб.</template>
+                </el-input>
               </el-form-item>
               <p>Стоимость рассылки {{ smsPrice }} руб.</p>
             </el-card>
