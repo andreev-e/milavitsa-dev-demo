@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\LinkCounter;
+use App\Models\MailingMessage;
 use Illuminate\Http\Request;
 
 class LinkCounterController extends Controller

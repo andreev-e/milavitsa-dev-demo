@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\LinkCounter;
 use Illuminate\Console\Command;
 use App\Models\MailingMessage;
 use Illuminate\Support\Facades\Mail;
@@ -45,7 +46,7 @@ class MailingSendEmail extends Command
             if (!empty($message->client->email)) {
                 if (!$message->client->isBlackListed()) {
                     $email_addr = $message->client->email[0];
-                    $text = $message->mailingList->text;
+                    $text = LinkCounter::shortenLinks($message->mailingList->text, $message->id);
                     $template = $message->mailingList->email_teplate ? $message->mailingList->email_teplate : 'default';
                     $subj = $message->mailingList->name;
                     try {

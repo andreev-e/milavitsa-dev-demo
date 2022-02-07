@@ -43,4 +43,8 @@ class MailingMessage extends Model
             }
         }
     }
+
+    public static function replaceLinks() {
+
+    }
 }

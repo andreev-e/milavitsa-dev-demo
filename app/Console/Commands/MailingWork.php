@@ -87,4 +87,5 @@ class MailingWork extends Command
         }
         return 0;
     }
+
 }
