@@ -33,7 +33,6 @@
         <template slot-scope="scope">
           <el-button icon="el-icon-document" @click="newSegment(scope.row.channel)">Новый сегмент (TODO)</el-button>
         </template>
-
       </el-table-column>
     </el-table>
   </div>
@@ -74,6 +73,9 @@ export default {
       this.loading = false
     },
     newSegment(channel) {
+      // TODO новый сегмент создаем на основе рассылки, канала и дсотигнутого показателя.
+      // При создании на бэкенде дополнителньо проверяем Client::isBlackListed() - не исключен ли.
+      // Далее не рализовано
       this.$prompt('Введите название сегмента', 'Новый сегмент', {
           confirmButtonText: 'Создать',
           cancelButtonText: 'Отменить',
