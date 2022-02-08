@@ -1,5 +1,6 @@
 <template>
   <div>
+    <el-button @click="loadStat">Обновить</el-button>
     <el-table
       v-loading="loading"
       :data="stat"
@@ -11,6 +12,7 @@
         sortable
       />
       <el-table-column
+        v-if="data === null"
         prop="status"
         label="Статус"
         sortable
@@ -24,8 +26,16 @@
         label="Всего"
         sortable
       />
+      <el-table-column
+        label="Действия"
+        sortable
+      >
+        <template slot-scope="scope">
+          <el-button icon="el-icon-document" @click="newSegment(scope.row.channel)">Новый сегмент (TODO)</el-button>
+        </template>
+
+      </el-table-column>
     </el-table>
-    <el-button @click="loadStat">Обновить</el-button>
   </div>
 </template>
 
@@ -38,6 +48,11 @@ export default {
     id: {
       type: Number,
       required: true,
+    },
+    data: {
+      type: String,
+      required: false,
+      default: null,
     }
   },
   data() {
@@ -54,10 +69,26 @@ export default {
   methods: {
     async loadStat() {
       this.loading = true
-      const { data } = await getStatistic(this.id)
+      const { data } = await getStatistic(this.id, { data: this.data })
       this.stat = data
       this.loading = false
     },
+    newSegment(channel) {
+      this.$prompt('Введите название сегмента', 'Новый сегмент', {
+          confirmButtonText: 'Создать',
+          cancelButtonText: 'Отменить',
+        }).then(({ value }) => {
+          this.$message({
+            type: 'success',
+            message: 'Будем создавать (todo) сегмент ' + value + ' канала ' + channel + ' цель ' + this.data,
+          });
+        }).catch(() => {
+          // this.$message({
+          //   type: 'error',
+          //   message: 'Ошибка',
+          // });
+        });
+    }
   }
 }
 </script>

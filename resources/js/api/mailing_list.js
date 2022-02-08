@@ -15,10 +15,11 @@ export function Copy(id) {
   });
 }
 
-export function getStatistic(id) {
+export function getStatistic(id, data) {
   return request({
-    url: `/mailing_list/${id}/statistic/`,
+    url: `/mailing_list/${id}/statistic`,
     method: 'get',
+    params: data,
   });
 }
 

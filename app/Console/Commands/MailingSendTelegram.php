@@ -63,6 +63,7 @@ class MailingSendTelegram extends Command
             } else {
                 $message->status = 'failed';
                 $message->save();
+                $message->queueNext();
             }
         }
         return 0;

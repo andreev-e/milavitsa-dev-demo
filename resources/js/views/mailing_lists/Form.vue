@@ -247,10 +247,16 @@
             </el-button-group>
           </el-col>
         </el-row>
+      </el-card>
+      <el-card>
         <el-row v-if="notEditable" :gutter="15">
           <el-col :span="24">
-            <h2>Статистика рассылки</h2>
-            <Statistics :id="form.id"/>
+            <h2>Статистика доставки</h2>
+            <Statistics :id="form.id" />
+            <h2>Статистика открытых сообщений</h2>
+            <Statistics :id="form.id" data="opens" />
+            <h2>Статистика открытых ссылок</h2>
+            <Statistics :id="form.id" data="links" />
           </el-col>
         </el-row>
       </el-card>
@@ -313,7 +319,7 @@ export default {
         status: null,
         channel_order: [],
         segments: [],
-        email_teplate: null,
+        email_teplate: 'default',
         whatsapp_teplate: null,
         selected_channels: [],
         chunk: null,
@@ -463,7 +469,8 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           if (this.form.start === null) {
-            this.form.start = new Date();
+            const now = new Date();
+            this.form.start = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes();
           }
           this.form.status = 'submitted';
           if (this.messageLength > 70 && this.form.selected_channels.indexOf('sms') !== -1) {

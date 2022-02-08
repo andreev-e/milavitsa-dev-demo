@@ -117,15 +117,41 @@ class MailingListController extends Controller
     }
 
     public function statistic($id, Request $request) {
-        $list = MailingMessage::select(
-                'channel',
-                'status',
-                DB::raw("count(*) as total"),
-            )
-            ->where('mailing_list_id', $id)
-            ->groupBy('channel', 'status');
 
+        if ($request->input('data')) {
+            if ($request->input('data') === 'opens') {
+                $list = MailingMessage::select(
+                        'channel',
+                        'opened',
+                        DB::raw("count(*) as total"),
+                    )
+                    ->where('opened', '>', 0)
+                    ->where('mailing_list_id', $id)
+                    ->groupBy('opened');
+            }
+            if ($request->input('data') === 'links') {
+                $list = MailingMessage::select(
+                        'channel',
+                        'link_counters.opened',
+                        DB::raw("count(*) as total"),
+                    )
+                    ->leftJoin('link_counters', 'mailing_messages.id', '=', 'link_counters.mailing_message_id')
+                    ->where('link_counters.opened', '>', 0)
+                    ->where('mailing_list_id', $id)
+                    ->groupBy('channel', 'link_counters.opened');
+
+            }
+        } else {
+            $list = MailingMessage::select(
+                    'channel',
+                    'status',
+                    DB::raw("count(*) as total"),
+                )
+                ->where('mailing_list_id', $id)
+                ->groupBy('channel', 'status');
+        }
         return MailingStatisticCollection::collection($list->get());
+
     }
 
 

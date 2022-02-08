@@ -239,6 +239,10 @@ class Client extends Model
 
     public function isBlackListed() {
         // TODO: дополнить проверку - черный список на основе отдельных номеров и емейлов
+        $activeUserEmails = User::select('email')->where('status', 1)->pluck('email')->toArray();
+        if (count(array_intersect($activeUserEmails, $this->email))) {
+            return true;
+        }
         return $this->segments()->where('type', '=', 'black')->count() !== 0;
     }
 

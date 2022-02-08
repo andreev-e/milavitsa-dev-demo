@@ -18,7 +18,7 @@ class MailingListResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'text' => $this->text,
-            'start' => $this->start,
+            'start' => $this->start ? $this->start->format('Y-m-d H:i') : null,
             'status' => $this->status,
             'allow_send_from' => substr($this->allow_send_from, 0, 5),
             'allow_send_to' => substr($this->allow_send_to, 0, 5),
